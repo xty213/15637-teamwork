@@ -16,6 +16,11 @@ with the PayPal or Venmo APIs for payment options.
 ### Eliot
 
 ### Salem
+This looks much more doable, and it's likely that you'd be able to finish up 
+the extra features you mentioned. In particular, I'd add email, as that adds
+a unique feature to your app that isn't represented elsewhere, from what I 
+can tell. If you're feeling adventurous, you may want to look into adding a
+real-time feature to the bidding price, or to the messaging feature.
 
 ---
 
