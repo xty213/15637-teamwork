@@ -14,6 +14,13 @@ may be also interesting and would be a great learning experience to integrate
 with the PayPal or Venmo APIs for payment options.
 
 ### Eliot
+The scope of this project looks much better for your final project. I think a 
+lot of your key features have overlap with Grumblr and should not be too 
+difficult to implement. You should definitely pick a couple of your additional
+features to try to implement to your application to ensure you meet the 
+requirements of the final project. I like the auction feature and definitely
+think you could add a lot to that.
+
 
 ### Salem
 This looks much more doable, and it's likely that you'd be able to finish up 
