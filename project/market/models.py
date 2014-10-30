@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 class UserInfo(models.Model):
     user = models.OneToOneField(User, related_name="info")
     user_hash = models.CharField(max_length=32)
-    email_setting = models.IntegerField(default=777)
+    email_setting = models.IntegerField(default=7)
 
     def __unicode__(self):
         return self.user.username
@@ -29,7 +29,7 @@ class Transaction(models.Model):
 
 class Item(models.Model):
     name = models.CharField(max_length=128)
-    discription = models.CharField(max_length=1024, blank=True)
+    description = models.CharField(max_length=1024, blank=True)
     transaction = models.OneToOneField(Transaction, related_name='item')
     category = models.CharField(max_length=256)
     pic1 = models.ImageField(upload_to='item_pic', blank=True)
@@ -54,7 +54,7 @@ class BidLog(models.Model):
 
 class Demand(models.Model):
     name = models.CharField(max_length=128)
-    discription = models.CharField(max_length=1024, blank=True)
+    description = models.CharField(max_length=1024, blank=True)
     price = models.FloatField(blank=True)
     user = models.ForeignKey(User, related_name="demands")
     is_closed = models.BooleanField(default=False)
