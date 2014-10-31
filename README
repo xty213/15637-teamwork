@@ -1,2 +1,8 @@
-This repository is for your course final project. Your project team
-should complete all project work using this repository.
+Detailed Project Specification
+==============================
+
+### Deliverables
+
+  * Specification document: specification.pdf
+  * Data models: project/market/models.py
+  * Wireframes: wireframes/
