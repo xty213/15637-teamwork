@@ -1,0 +1,188 @@
+/* global begin */
+
+*{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* header begin */
+
+#header-wrapper{
+    background-color: #990000;
+    height: 41px;
+    padding: 0 180px;
+    position: fixed;
+    border-bottom: #ccc 1px solid;
+}
+
+#header-logo{
+    text-indent: 100%;
+    overflow: hidden;
+    background: url("../img/logo.png");
+    width: 139px;
+    height: 25px;
+    display: inline-block;
+    white-space: nowrap;
+    margin-top: 7px;
+}
+
+#header-nav li{
+    display: inline-block;
+    width: 100px;
+    text-align: center;
+    line-height: 40px;
+}
+
+#header-nav li a{
+    display: block;
+    color: #fff;
+}
+
+#header-nav li:hover, #header-nav li.checked{
+    background-color: #790000;
+}
+
+#header-search{
+    width: 400px;
+    margin: 5px 30px;
+}
+
+#selected-category{
+    width: 100px;
+}
+
+/* main begin */
+
+#main-wrapper{
+    width: 850px;
+    margin: 0 auto;
+    padding-top: 40px;
+}
+
+#left-col{
+    width: 200px;
+    height: 300px;
+    margin-right: -200px;
+    padding-top: 10px;
+}
+
+#left-nav{
+    position: fixed;
+    padding-left: 50px;
+}
+
+#left-nav h2{
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+#left-nav a{
+    color: #990000;
+}
+
+#left-nav li{
+    margin-bottom: 10px;
+}
+
+#right-col{
+    width: 650px;
+    padding: 30px 20px;
+    border-left: 1px #ccc solid;
+}
+
+div.item-left-col{
+    float: left;
+    width: 236px;
+    margin-right: -236px;
+}
+
+div.item-left-col.nopic{
+    display: none;
+}
+
+div.item-right-col{
+    margin-left: 236px;
+}
+
+div.item-right-col.nopic{
+    margin-left: 0;
+}
+
+p.item-photo{
+    width: 236px;
+    height: 236px;
+    border: #ccc 1px solid;
+    box-shadow: #ccc 0 0 5px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 234px;
+}
+
+p.item-photo img{
+    max-width: 234px;
+    max-height: 234px;
+}
+
+h3.item-title{
+    margin:0 0 12px;
+    font-size: 18px;
+}
+
+p.item-description, h3.item-title, span.item-price, p.item-andrew-id{
+    width: 340px;
+    padding: 0 20px;
+}
+
+p.item-description.nopic, h3.item-title.nopic, span.item-price.nopic, p.item-andrew-id.nopic{
+    width: 100%;
+}
+
+p.item-andrew-id{
+    color: #999;
+}
+
+span.item-price span{
+    color: #990000;
+    font-size: 22px;
+}
+
+.panel-heading{
+    padding: 5px 15px;
+}
+
+.panel-heading p{
+    margin-bottom: 0;
+    line-height: 34px;
+}
+
+.item-photo-list li{
+    width: 56px;
+    height: 56px;
+    padding: 2px;
+    border-radius: 5px;
+    border: 1px #ccc solid;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 50px;
+    display: inline-block;
+}
+
+.item-photo-list li img{
+    max-width: 50px;
+    max-height: 50px;
+    cursor: pointer;
+}
+
+#footer-wrapper{
+    height: 60px;
+    text-align: center;
+    line-height: 60px;
+    vertical-align: middle;
+    background-color: #f5f5f5;
+    border-top: #ccc 1px solid;
+}
+
+#footer-wrapper p{
+    margin-bottom: 0;
+}
