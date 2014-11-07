@@ -1,0 +1,98 @@
+/* global begin */
+
+*{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+html, body{
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    position: relative;
+}
+
+#header{
+    background:url("../img/crossword.png");
+    height: 62%;
+    width: 100%;
+}
+
+#footer{
+    background-color: #990000;
+    height: 38%;
+    padding-top:140px;
+    color: #fff;
+    text-align: center;
+    line-height: 30px;
+}
+
+#footer a{
+    display: inline-block;
+    margin: 0 30px;
+    color: #fff;
+}
+
+#main-wrapper{
+    height: 360px;
+    width: 420px;
+    background-color: #fff;
+    margin: 30px auto;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
+    padding: 20px 40px;
+}
+
+#main-wrapper h2{
+    text-align: center;
+    margin: 10px 0 20px;
+}
+
+#main-wrapper a{
+    color: #990000;
+}
+
+#main-wrapper input[type="text"], #main-wrapper input[type="password"]{
+    background-color: #ffdede;
+    font-size: 20px;
+    line-height: 48px;
+    height: 48px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+}
+
+#login-btn{
+    background-color: #CA3B37;
+    border-radius: 10px;
+}
+
+#login-btn:hover{
+    background-color: #990000;
+}
+
+#site-name{
+    margin: -44% auto 0;
+    text-align: center;
+    text-shadow: 0 1px 0 #bbb;
+    color: #990000;
+    font-size: 42px;
+}
+
+#left-col, #right-col{
+    height: 50px;
+    padding-top: 4px;
+    margin-top: 20px;
+    width: 50%;
+}
+
+#left-col{
+    border-right: 1px solid #ccc;
+    text-align: right;
+    padding-right: 20px;
+}
+
+#right-col{
+    padding-left: 20px;
+}
