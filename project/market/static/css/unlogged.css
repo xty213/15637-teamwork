@@ -63,7 +63,7 @@ html, body{
     border-radius: 10px;
 }
 
-#login-btn{
+#login-btn #forget-password-submit-btn{
     background-color: #CA3B37;
     border-radius: 10px;
 }
