@@ -53,6 +53,11 @@ ROOT_URLCONF = 'website.urls'
 
 WSGI_APPLICATION = 'website.wsgi.application'
 
+LOGIN_URL = '/login/'
+
+LOGIN_REDIRECT_URL = '/'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
