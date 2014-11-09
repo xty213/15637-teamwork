@@ -7,22 +7,21 @@
 }
 
 html, body{
-    height: 100%;
-    width: 100%;
     margin: 0;
     position: relative;
+    min-width: 500px;
 }
 
 #header{
     background:url("../img/crossword.png");
-    height: 62%;
+    height: 394px;
     width: 100%;
 }
 
 #footer{
     background-color: #990000;
-    height: 38%;
-    padding-top:140px;
+    padding-top:160px;
+    height: 300px;
     color: #fff;
     text-align: center;
     line-height: 30px;
@@ -73,7 +72,7 @@ html, body{
 }
 
 #site-name{
-    margin: -44% auto 0;
+    margin: -632px auto 0;
     text-align: center;
     text-shadow: 0 1px 0 #bbb;
     color: #990000;
