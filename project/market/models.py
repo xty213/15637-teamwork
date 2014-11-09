@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 
 class UserInfo(models.Model):
     user = models.OneToOneField(User, related_name="info")
-    user_hash = models.CharField(max_length=32)
     email_setting = models.IntegerField(default=7)
 
     def __unicode__(self):
