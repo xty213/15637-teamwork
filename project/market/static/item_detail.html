@@ -1,0 +1,230 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Online Flea Market</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/logged.css">
+</head>
+<body>
+    <div id="header">
+        <div id="header-wrapper">
+            <a id="header-logo" href="#" title="Online Flea Market" class="pull-left">Online Flea Market</a>
+            <div id="header-search" class="input-group input-group-sm pull-left">
+                <div class="input-group-btn ">
+                    <button id="selected-category" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">All Category <span class="caret"></span></button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#">All Category</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">Apps &amp; Games</a></li>
+                            <li><a href="#">Arts &amp; Crafts</a></li>
+                            <li><a href="#">Books</a></li>
+                            <li><a href="#">Cell Phones</a></li>
+                            <li><a href="#">Clothing</a></li>
+                            <li><a href="#">Computers</a></li>
+                            <li><a href="#">Electronics</a></li>
+                            <li><a href="#">Foods</a></li>
+                            <li><a href="#">Gift Cards</a></li>
+                            <li><a href="#">Health</a></li>
+                            <li><a href="#">Musical Inst</a></li>
+                            <li><a href="#">Office</a></li>
+                            <li><a href="#">Software</a></li>
+                            <li><a href="#">Sports</a></li>
+                            <li><a href="#">Tools</a></li>
+                        </ul>
+                </div>
+                <input type="text" class="form-control">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button">Search</button>
+                </span>
+            </div>
+            <ul id="header-nav" class="pull-right">
+                <li class="checked"><a href="#">Buyer View</a></li>
+                <li><a href="#">Seller View</a></li>
+                <li><a href="#">My Account</a></li>
+            </ul>
+        </div>
+    </div>
+    <div id="main-wrapper">
+        <div id="left-col" class="pull-left">
+            <div id="user-info">
+                <h2>Seller Information</h2>
+                <a href="#" id="user-info-andrew-id">tianyux</a>
+                <br>
+                <span>
+                    <span class="glyphicon glyphicon-star"></span>
+                    <span class="glyphicon glyphicon-star"></span>
+                    <span class="glyphicon glyphicon-star"></span>
+                    <span class="glyphicon glyphicon-star"></span>
+                    <span class="glyphicon glyphicon-star"></span>
+                </span>
+                <br>
+                <button type="button" class="btn btn-default">Directory</button>
+                <button type="button" class="btn btn-default">Contact</button>
+            </div>
+        </div>
+        <div id="right-col" class="pull-right">
+            <ul id="item-list">
+                <li>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <p class="item-category panel-title pull-left">Electronics</p>
+                            <button type="button" class="btn btn-danger pull-right">Buy This!</button>
+                            <button type="button" class="btn btn-default pull-right">Ask Question</button>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="item-left-col">
+                                <p class="item-photo">
+                                    <img src="/static/img/item1_1.jpg">
+                                </p>
+                                <ul class="item-photo-list">
+                                    <li><img src="/static/img/item1_1.jpg"></li>
+                                    <li><img src="/static/img/item1_2.jpg"></li>
+                                    <li><img src="/static/img/item1_3.jpg"></li>
+                                    <li><img src="/static/img/item1_4.jpg"></li>
+                                </ul>
+                            </div>
+                            <div class="item-right-col">
+                                <h3 class="item-title">Logitech Wireless Touch Keyboard K400</h3>
+                                <span class="item-price">Price: <span>$19.95</span></span>
+                                <p class="item-andrew-id">tianyux posted at 11/03/2014 22:09</p>
+                                <p class="item-description">
+                                    Easy and comfortable typing on quiet keys with bold, easy-to-read characters <br>
+                                    Large (3.5-inch) touch-pad with multi-touch navigation for easier web browsing <br>
+                                    Control your TV-connected laptop from the couch with 33 feet/10 meter wireless range <br>
+                                    Plug the tiny Logitech Unifying wireless receiver into your laptop and start surfing the web <br>
+                                    Works with Windows 7, Windows Vista and Windows XP
+                                </p>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="item-qa">
+                                <h4>Item QA</h4>
+                                <ul>
+                                    <li>
+                                        <span class="item-qa-sign">Q:</span>
+                                        <span>Does this work with Raspberry Pi?</span>
+                                        <br>
+                                        <span class="item-qa-sign">A:</span>
+                                        <span>Yes it does I am using it with mine and have tested it with the Debian and the NOOBS version. Im actually looking to see if I can use two at the same time. One with my Windows 7 and my pi without crosstalk.</span>
+                                    </li>
+                                    <li>
+                                        <span class="item-qa-sign">Q:</span>
+                                        <span>Is the keyboard good for writing?</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <p class="item-category panel-title pull-left">Books</p>
+                            <button type="button" class="btn btn-danger pull-right">Buy This!</button>
+                            <button type="button" class="btn btn-default pull-right">Ask Question</button>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="item-left-col nopic">
+                                <p class="item-photo">
+                                </p>
+                                <ul class="item-photo-list">
+                                </ul>
+                            </div>
+                            <div class="item-right-col nopic">
+                                <h3 class="item-title nopic">Computer Systems: A Programmer's Perspective (2nd Edition)</h3>
+                                <span class="item-price nopic">Price: <span>$84.37</span></span>
+                                <p class="item-andrew-id nopic">hquan posted at 11/03/2014 21:26</p>
+                                <p class="item-description nopic">
+                                    For Computer Systems, Computer Organization and Architecture courses in CS, EE, and ECE departments. <br>
+                                    ISBN-13: 978-0136108047
+                                </p>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="item-qa">
+                                <h4>Item QA</h4>
+                                <ul>
+                                    <li>
+                                        <span class="item-qa-sign">Q:</span>
+                                        <span>Does this work with Raspberry Pi?</span>
+                                        <br>
+                                        <span class="item-qa-sign">A:</span>
+                                        <span>Yes it does I am using it with mine and have tested it with the Debian and the NOOBS version. Im actually looking to see if I can use two at the same time. One with my Windows 7 and my pi without crosstalk.</span>
+                                    </li>
+                                    <li>
+                                        <span class="item-qa-sign">Q:</span>
+                                        <span>Is the keyboard good for writing?</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <p class="item-category panel-title pull-left">Clothing</p>
+                            <button type="button" class="btn btn-danger pull-right">Buy This!</button>
+                            <button type="button" class="btn btn-default pull-right">Ask Question</button>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="item-left-col">
+                                <p class="item-photo">
+                                    <img src="/static/img/item2_1.jpg">
+                                </p>
+                                <ul class="item-photo-list">
+                                    <li><img src="/static/img/item2_1.jpg"></li>
+                                </ul>
+                            </div>
+                            <div class="item-right-col">
+                                <h3 class="item-title">Columbia Sportswear Thermarator Neck Gaiter</h3>
+                                <span class="item-price">Current bid: <span>$18.50</span> by h***n</span><br>
+                                <span class="item-price">20h left (11/04/2014 18:31)</span>
+                                <p class="item-andrew-id">tianyux posted at 11/03/2014 18:31</p>
+                                <p class="item-description">
+                                    100% polyester Omni-Heat 280g Thermarator fleece. Omni-Heat Advanced Reflective. Contoured Hem. Adjustable Draw Cord.
+                                </p>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="item-bidding-hist">
+                                <h4>Bidding History</h4>
+                                <table class="table table-striped table-condensed">
+                                    <tr><th>Bidder</th><th>Bid Amount</th><th>Bid Time</th></tr>
+                                    <tr><td>h***n</td><td>$18.50</td><td>11/04/2014 18:31:05</td></tr>
+                                    <tr><td>t***x</td><td>$17.50</td><td>11/03/2014 21:09:03</td></tr>
+                                    <tr><td>h***n</td><td>$16.50</td><td>11/03/2014 20:09:03</td></tr>
+                                </table>
+                            </div>
+                            <div class="item-qa">
+                                <h4>Item QA</h4>
+                                <ul>
+                                    <li>
+                                        <span class="item-qa-sign">Q:</span>
+                                        <span>Does this work with Raspberry Pi?</span>
+                                        <br>
+                                        <span class="item-qa-sign">A:</span>
+                                        <span>Yes it does I am using it with mine and have tested it with the Debian and the NOOBS version. Im actually looking to see if I can use two at the same time. One with my Windows 7 and my pi without crosstalk.</span>
+                                    </li>
+                                    <li>
+                                        <span class="item-qa-sign">Q:</span>
+                                        <span>Is the keyboard good for writing?</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div id="footer-wrapper">
+        <p> All Rights Reserved 2014</p>
+    </div>
+
+    <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+</body>
+</html>

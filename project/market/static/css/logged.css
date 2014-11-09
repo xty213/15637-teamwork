@@ -11,6 +11,10 @@ body {
     min-height: 620px;
 }
 
+body a, body a:hover{
+    color: #990000;
+}
+
 /* header begin */
 
 #header{
@@ -77,14 +81,31 @@ body {
     padding-top: 10px;
 }
 
+#left-col h2{
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+#left-col #dir-link{
+    color: #666;
+}
+
+#user-info{
+    padding-right: 20px;
+}
+
+#user-info-andrew-id{
+    font-size: 24px;
+}
+
+#user-info{
+    position: fixed;
+    padding-left: 20px;
+}
+
 #left-nav{
     position: fixed;
     padding-left: 50px;
-}
-
-#left-nav h2{
-    font-size: 20px;
-    margin-bottom: 20px;
 }
 
 #left-nav a{
@@ -117,6 +138,47 @@ div.item-right-col{
 
 div.item-right-col.nopic{
     margin-left: 0;
+}
+
+div.item-bidding-hist, div.item-qa{
+    border-top: 1px dotted #ccc;
+    margin-top: 10px;
+}
+
+span.item-qa-sign{
+    color: #990000;
+}
+
+div.item-qa li{
+    border-bottom: 1px dotted #ccc;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+}
+
+div.item-qa li:last-child{
+    border-bottom: none;
+}
+
+div.item-bidding-hist table{
+    margin-bottom: 0;
+}
+
+div.panel-body h4{
+    font-size: 16px;
+    color: #990000;
+}
+
+.panel-heading{
+    padding: 5px 15px;
+}
+
+.panel-heading p{
+    margin-bottom: 0;
+    line-height: 34px;
+}
+
+.panel-heading button{
+    margin-left: 10px;
 }
 
 p.item-photo{
@@ -155,15 +217,6 @@ p.item-andrew-id{
 span.item-price span{
     color: #990000;
     font-size: 22px;
-}
-
-.panel-heading{
-    padding: 5px 15px;
-}
-
-.panel-heading p{
-    margin-bottom: 0;
-    line-height: 34px;
 }
 
 .item-photo-list li{
