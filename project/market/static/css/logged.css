@@ -127,6 +127,20 @@ div.tab-content{
     min-height: 400px;
 }
 
+div.my-account-tab{
+    min-height: 480px;
+    padding-left: 30px;
+}
+
+div.my-account-tab h3{
+    margin: 0 0 20px;
+    color: #990000;
+}
+
+div.tab-pane textarea{
+    resize: none;
+}
+
 div.item-left-col{
     float: left;
     width: 236px;
