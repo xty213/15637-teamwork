@@ -1,0 +1,138 @@
+{% extends 'logged_base.html' %}
+
+{% block additional_css %}
+<link rel="stylesheet" href="/static/css/jquery.datetimepicker.css">
+{% endblock %}
+
+{% block additional_js %}
+<script src="/static/js/jquery.datetimepicker.js"></script>
+<script src="/static/js/post_item.js"></script>
+{% endblock %}
+
+{% block main_content %}
+        <div id="left-col" class="pull-left">
+            <div id="left-nav">
+                <h2>Category</h2>
+                <ul>
+                    <li><a href="#">Apps &amp; Games</a></li>
+                    <li><a href="#">Arts &amp; Crafts</a></li>
+                    <li><a href="#">Books</a></li>
+                    <li><a href="#">Cell Phones</a></li>
+                    <li><a href="#">Clothing</a></li>
+                    <li><a href="#">Computers</a></li>
+                    <li><a href="#">Electronics</a></li>
+                    <li><a href="#">Foods</a></li>
+                    <li><a href="#">Gift Cards</a></li>
+                    <li><a href="#">Health</a></li>
+                    <li><a href="#">Musical Inst</a></li>
+                    <li><a href="#">Office</a></li>
+                    <li><a href="#">Software</a></li>
+                    <li><a href="#">Sports</a></li>
+                    <li><a href="#">Tools</a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="right-col" class="pull-right container">
+            <div class="row">
+                <div class="span12">
+                    <div class="tabbable">
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a href="#item-posting-panel" data-toggle="tab">Item Posting</a>
+                            </li>
+                            <li>
+                                <a href="#demand-list-panel" data-toggle="tab">Demand List</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="item-posting-panel">
+                                <form class="form-horizontal">
+                                    <div class="form-group">
+                                        <div class="col-sm-3"></div>
+                                        <div class="col-sm-8"><p class="text-muted text-right" style="margin:0;">Fields with * is required</p></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Item Name*</label>
+                                        <div class="col-sm-8"><input type="text" class="form-control" name="name" required></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Category*</label>
+                                        <div class="col-sm-8">
+                                            <select name="category" class="form-control" required>
+                                                <option value="1">Apps &amp; Games</option>
+                                                <option value="2">Arts &amp; Crafts</option>
+                                                <option value="3">Books</option>
+                                                <option value="4">Cell Phones</option>
+                                                <option value="5">Clothing</option>
+                                                <option value="6">Computers</option>
+                                                <option value="7">Electronics</option>
+                                                <option value="8">Foods</option>
+                                                <option value="9">Gift Cards</option>
+                                                <option value="10">Health</option>
+                                                <option value="11">Musical Inst</option>
+                                                <option value="12">Office</option>
+                                                <option value="13">Software</option>
+                                                <option value="14">Sports</option>
+                                                <option value="15">Tools</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Price Mode*</label>
+                                        <div class="col-sm-4 radio">
+                                            <label>
+                                                <input type="radio" name="mode" value="fixed" checked>
+                                                Fixed Price
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-4 radio">
+                                            <label>
+                                                <input type="radio" name="mode" value="auction">
+                                                Auction
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label"><span id="auction-label" style="display:none;">Starting </span>Price*</label>
+                                        <div class="col-sm-8">
+                                            <div class="input-group">
+                                                <div class="input-group-addon">$</div>
+                                                <input type="number" class="form-control" name="price" min="0" step="0.01" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="auction-end-time" class="form-group" style="display:none;">
+                                        <label class="col-sm-3 control-label">Auction End Time*</label>
+                                        <div class="col-sm-8"><input id="endtime" type="datetime" class="form-control" name="endtime"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Description</label>
+                                        <div class="col-sm-8"><textarea class="form-control" name="description" maxlength="1024"></textarea></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Pictures</label>
+                                        <div class="col-sm-8">
+                                            <input type="file" class="form-control" name="pic1">
+                                            <input type="hidden" id="pic-num" name="pic-num" value="1">
+                                            <button id="change-pic-btn" type="button" class="btn btn-block btn-default btn-xs">Add another picture</button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-3 col-sm-8">
+                                            <button type="submit" class="btn btn-danger">Post Item</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="tab-pane" id="demand-list-panel">
+                                <p>
+                                    Under Construction
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+{% endblock %}

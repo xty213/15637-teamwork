@@ -87,3 +87,9 @@ def item_detail(request):
     item['qas'] = [{'q':'Hello', 'a':'Hi'}, {'q':'No answer'}]
     context['item'] = item
     return render(request, 'item_detail.html', context)
+
+
+@login_required
+def seller_view(request):
+    context = {'mode':'seller_view'}
+    return render(request, 'seller_view.html', context)

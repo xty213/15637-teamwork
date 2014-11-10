@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Online Flea Market</title>
-    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/css/logged.css">
     {% block additional_css %}{% endblock %}
 </head>
@@ -41,7 +41,7 @@
             </div>
             <ul id="header-nav" class="pull-right">
                 <li {% if mode == 'buyer_view' %}class="checked"{% endif %}><a href="{% if mode == 'buyer_view' %}#{% else %}{% url 'buyer_view' %}{% endif %}">Buyer View</a></li>
-                <li {% if mode == 'seller_view' %}class="checked"{% endif %}><a href="#">Seller View</a></li>
+                <li {% if mode == 'seller_view' %}class="checked"{% endif %}><a href="{% if mode == 'seller_view' %}#{% else %}{% url 'seller_view' %}{% endif %}">Seller View</a></li>
                 <li {% if mode == 'my_account' %}class="checked"{% endif %}><a href="#">My Account</a></li>
             </ul>
         </div>

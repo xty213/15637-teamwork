@@ -14,4 +14,5 @@ urlpatterns = patterns('',
     url(r'^confirm_registration/(?P<username>[a-zA-Z0-9_@\+\-]+)/(?P<token>[a-z0-9\-]+)$', views.confirm_registration, name='confirm_registration'),
     url(r'^buyer_view/$', views.buyer_view, name='buyer_view'),
     url(r'^item_detail/$', views.item_detail, name='item_detail'),
+    url(r'^seller_view/$', views.seller_view, name='seller_view'),
 )
