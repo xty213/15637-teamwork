@@ -127,6 +127,10 @@ div.tab-content{
     min-height: 400px;
 }
 
+div.tab-pane textarea{
+    resize: none;
+}
+
 div.item-left-col{
     float: left;
     width: 236px;
