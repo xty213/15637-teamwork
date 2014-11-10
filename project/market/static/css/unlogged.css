@@ -37,7 +37,7 @@ html, body{
     height: 360px;
     width: 420px;
     background-color: #fff;
-    margin: 30px auto;
+    margin: 20px auto 30px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
     border-radius: 15px;
     padding: 20px 40px;
@@ -72,11 +72,10 @@ html, body{
 }
 
 #site-name{
-    margin: -632px auto 0;
-    text-align: center;
-    text-shadow: 0 1px 0 #bbb;
-    color: #990000;
-    font-size: 42px;
+    margin: -660px auto 0;
+    background-image: url("../img/logo_lg.png");
+    height: 100px;
+    width: 491px;
 }
 
 #left-col, #right-col{
