@@ -13,6 +13,7 @@
                 <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm Password" autocomplete="off">
             </div>
             <button id="register-btn" type="submit" class="btn btn-block btn-lg btn-danger">Join the Market</button>
+            <div class="pull-right" style="margin-top: 10px;">Old user? <a href="{% url 'login' %}">Login here!</a></div>
             {% csrf_token %}
         </form>
 {% endblock %}
