@@ -30,7 +30,7 @@ class Item(models.Model):
     name = models.CharField(max_length=128)
     description = models.CharField(max_length=1024, blank=True)
     transaction = models.OneToOneField(Transaction, related_name='item')
-    category = models.CharField(max_length=256)
+    category = models.IntegerField(blank=True)
     pic1 = models.ImageField(upload_to='item_pic', blank=True)
     pic2 = models.ImageField(upload_to='item_pic', blank=True)
     pic3 = models.ImageField(upload_to='item_pic', blank=True)
