@@ -35,7 +35,6 @@ class Item(models.Model):
     pic2 = models.ImageField(upload_to='item_pic', blank=True)
     pic3 = models.ImageField(upload_to='item_pic', blank=True)
     pic4 = models.ImageField(upload_to='item_pic', blank=True)
-    pic5 = models.ImageField(upload_to='item_pic', blank=True)
 
     def __unicode__(self):
         return self.name
