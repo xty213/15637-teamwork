@@ -127,10 +127,27 @@ def home(request):
 @login_required
 def buyer_view(request):
     context = {'mode': 'buyer_view'}
-    item = {'pics':['/static/img/item1_1.jpg', '/static/img/item1_2.jpg'], 'description':'hahahahahahahahah', 'category':'Apps & Games', 'name': 'WeChat', 'is_auction': False, 'price': 30, 'start_time':datetime.now(), 'seller':{'name':'hquan'}}
     items = []
-    items.append(item)
     context['items'] = items
+
+    item_objs = Item.objects.all()
+
+    for item_obj in item_objs:
+        item = {}
+        item['id'] = item_obj.id
+        item['category'] = category_converter(item_obj.category)
+        item['name'] = item_obj.name
+        item['is_auction'] = item_obj.transaction.is_auction
+        item['price'] = '%.2f' % (item_obj.transaction.deal_price / 100.0)
+        item['start_time'] = item_obj.transaction.start_time
+        item['end_time'] = item_obj.transaction.end_time
+        item['seller'] = {'name':item_obj.transaction.seller.username}
+        item['description'] = item_obj.description
+
+        items.append(item)
+
+    items.sort(key=lambda x:float(x['price']))
+
     return render(request, 'buyer_view.html', context)
 
 
@@ -146,6 +163,7 @@ def item_detail(request, id):
     seller = {'name':seller_obj.username}
     item['seller'] = seller
 
+    item['id'] = item_obj.id
     item['category'] = category_converter(item_obj.category)
     item['name'] = item_obj.name
     item['is_auction'] = item_obj.transaction.is_auction
