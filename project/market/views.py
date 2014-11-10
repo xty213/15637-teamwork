@@ -93,3 +93,8 @@ def item_detail(request):
 def seller_view(request):
     context = {'mode':'seller_view'}
     return render(request, 'seller_view.html', context)
+
+@login_required
+def my_account(request):
+    context = {'mode':'my_account'}
+    return render(request, 'my_account.html', context)
