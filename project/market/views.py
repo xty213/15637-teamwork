@@ -149,7 +149,7 @@ def item_detail(request, id):
     item['category'] = category_converter(item_obj.category)
     item['name'] = item_obj.name
     item['is_auction'] = item_obj.transaction.is_auction
-    item['price'] = item_obj.transaction.deal_price
+    item['price'] = '%.2f' % (item_obj.transaction.deal_price / 100.0)
     item['start_time'] = item_obj.transaction.start_time
     item['end_time'] = item_obj.transaction.end_time
     item['description'] = item_obj.description
@@ -165,7 +165,7 @@ def post_item(request):
         return redirect(reverse('seller_view'))
 
     if form.cleaned_data.get('mode') == 'fixed':
-        transaction = Transaction(deal_price=form.cleaned_data.get('price'),
+        transaction = Transaction(deal_price=(int(form.cleaned_data.get('price') * 100)),
                                   seller=request.user)
         transaction.save()
 
