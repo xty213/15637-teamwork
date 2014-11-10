@@ -23,6 +23,7 @@ body a, body a:hover{
     background-color: #990000;
     height: 41px;
     width: 100%;
+    z-index: 777;
 }
 
 #header-wrapper{
@@ -75,8 +76,8 @@ body a, body a:hover{
 }
 
 #left-col{
+    position: fixed;
     width: 200px;
-    height: 300px;
     margin-right: -200px;
     padding-top: 10px;
 }
@@ -104,7 +105,6 @@ body a, body a:hover{
 }
 
 #left-nav{
-    position: fixed;
     padding-left: 50px;
 }
 
@@ -120,6 +120,11 @@ body a, body a:hover{
     width: 650px;
     padding: 30px 20px;
     border-left: 1px #ccc solid;
+}
+
+div.tab-content{
+    margin-top: 20px;
+    min-height: 400px;
 }
 
 div.item-left-col{
