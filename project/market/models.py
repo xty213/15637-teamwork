@@ -13,14 +13,14 @@ class UserInfo(models.Model):
 class Transaction(models.Model):
     start_time = models.DateTimeField(auto_now_add=True)
     deal_time = models.DateTimeField(auto_now_add=False, blank=True)
-    duration = models.IntegerField(blank=True)
-    deal_price = models.FloatField(blank=True)
+    end_time = models.DateTimeField(auto_now_add=False, blank=True)
+    deal_price = models.IntegerField(blank=True)
     is_auction = models.BooleanField(default=False)
     is_closed = models.BooleanField(default=False)
     seller = models.ForeignKey(User, related_name="trans_as_seller")
     buyer = models.ForeignKey(User, related_name="trans_as_buyer", blank=True)
-    seller_rate = models.FloatField(blank=True)
-    buyer_rate = models.FloatField(blank=True)
+    seller_rate = models.IntegerField(blank=True)
+    buyer_rate = models.IntegerField(blank=True)
 
     def __unicode__(self):
         return self.id
@@ -43,7 +43,7 @@ class Item(models.Model):
 
 class BidLog(models.Model):
     bid_time = models.DateTimeField(auto_now_add=True)
-    bid_price = models.FloatField()
+    bid_price = models.IntegerField()
     user = models.ForeignKey(User, related_name="bid_logs")
     transaction = models.ForeignKey(Transaction, related_name="bid_logs")
 
@@ -54,7 +54,7 @@ class BidLog(models.Model):
 class Demand(models.Model):
     name = models.CharField(max_length=128)
     description = models.CharField(max_length=1024, blank=True)
-    price = models.FloatField(blank=True)
+    price = models.IntegerField(blank=True)
     user = models.ForeignKey(User, related_name="demands")
     is_closed = models.BooleanField(default=False)
 
