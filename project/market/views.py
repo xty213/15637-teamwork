@@ -11,8 +11,6 @@ from django.core.urlresolvers import reverse
 from forms import *
 from models import *
 
-from datetime import datetime
-
 
 def register(request):
     context = {}
@@ -81,13 +79,33 @@ def buyer_view(request):
 
 
 @login_required
-def item_detail(request):
+def item_detail(request, id):
     context = {'mode': 'buyer_view'}
     item = {'pics':['/static/img/item1_1.jpg', '/static/img/item1_2.jpg'], 'description':'hahahahahahahahah', 'category':'Apps & Games', 'name': 'WeChat', 'is_auction': False, 'price': 30, 'start_time':datetime.now(), 'seller':{'name':'hquan', 'stars':xrange(3), 'empty_stars':xrange(2)}}
     item['qas'] = [{'q':'Hello', 'a':'Hi'}, {'q':'No answer'}]
     context['item'] = item
     return render(request, 'item_detail.html', context)
 
+
+@login_required
+def post_item(request):
+    form = PostItemForm(request.POST)
+
+    if not form.is_valid():
+        return redirect(reverse('seller_view'))
+
+    if form.cleaned_data.get('mode') == 'fixed':
+        transaction = Transaction(deal_price=form.cleaned_data.get('price'),
+                                  seller=request.user)
+        transaction.save()
+
+        item = Item(name=form.cleaned_data.get('name'),
+                    description=form.cleaned_data.get('description'),
+                    transaction=transaction,
+                    category=form.cleaned_data.get('category'))
+        item.save()
+
+    return redirect(reverse('item_detail', args=[item.id]))
 
 @login_required
 def seller_view(request):
