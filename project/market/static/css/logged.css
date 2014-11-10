@@ -118,6 +118,7 @@ body a, body a:hover{
 
 #right-col{
     width: 650px;
+    min-height: 540px;
     padding: 30px 20px;
     border-left: 1px #ccc solid;
 }
