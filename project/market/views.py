@@ -11,6 +11,8 @@ from django.core.urlresolvers import reverse
 from forms import *
 from models import *
 
+from datetime import datetime
+
 
 def register(request):
     context = {}
@@ -50,6 +52,7 @@ http://%s%s
 
     return redirect(reverse('login'))
 
+
 def confirm_registration(request, username, token):
     user = get_object_or_404(User, username=username)
 
@@ -60,3 +63,18 @@ def confirm_registration(request, username, token):
     user.save()
 
     return redirect(reverse('home'))
+
+
+@login_required
+def home(request):
+    return buyer_view(request)
+
+
+@login_required
+def buyer_view(request):
+    context = {'mode': 'buyer_view'}
+    item = {'pics':['/static/img/item1_1.jpg', '/static/img/item1_2.jpg'], 'description':'hahahahahahahahah', 'category':'Apps & Games', 'name': 'WeChat', 'is_auction': False, 'price': 30, 'start_time':datetime.now(), 'seller':'hquan'}
+    items = []
+    items.append(item)
+    context['items'] = items
+    return render(request, 'buyer_view.html', context)
