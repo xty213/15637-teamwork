@@ -4,6 +4,8 @@ from django.http import Http404
 
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login, authenticate
+
 
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
@@ -61,6 +63,9 @@ def confirm_registration(request, username, token):
 
     user.is_active = True
     user.save()
+
+    user.backend = 'django.contrib.auth.backends.ModelBackend'
+    login(request, user)
 
     return redirect(reverse('home'))
 
