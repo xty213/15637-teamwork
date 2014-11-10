@@ -73,8 +73,17 @@ def home(request):
 @login_required
 def buyer_view(request):
     context = {'mode': 'buyer_view'}
-    item = {'pics':['/static/img/item1_1.jpg', '/static/img/item1_2.jpg'], 'description':'hahahahahahahahah', 'category':'Apps & Games', 'name': 'WeChat', 'is_auction': False, 'price': 30, 'start_time':datetime.now(), 'seller':'hquan'}
+    item = {'pics':['/static/img/item1_1.jpg', '/static/img/item1_2.jpg'], 'description':'hahahahahahahahah', 'category':'Apps & Games', 'name': 'WeChat', 'is_auction': False, 'price': 30, 'start_time':datetime.now(), 'seller':{'name':'hquan'}}
     items = []
     items.append(item)
     context['items'] = items
     return render(request, 'buyer_view.html', context)
+
+
+@login_required
+def item_detail(request):
+    context = {'mode': 'buyer_view'}
+    item = {'pics':['/static/img/item1_1.jpg', '/static/img/item1_2.jpg'], 'description':'hahahahahahahahah', 'category':'Apps & Games', 'name': 'WeChat', 'is_auction': False, 'price': 30, 'start_time':datetime.now(), 'seller':{'name':'hquan', 'stars':xrange(3), 'empty_stars':xrange(2)}}
+    item['qas'] = [{'q':'Hello', 'a':'Hi'}, {'q':'No answer'}]
+    context['item'] = item
+    return render(request, 'item_detail.html', context)

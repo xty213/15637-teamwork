@@ -1,0 +1,30 @@
+{% extends 'logged_base.html' %}
+
+{% block main_content %}
+        <div id="left-col" class="pull-left">
+            <div id="user-info">
+                <h2>Seller Information</h2>
+                <a href="#" id="user-info-andrew-id">{{item.seller.name}}</a>
+                <br>
+                <span>
+                    {% for i in item.seller.stars %}
+                    <span class="glyphicon glyphicon-star"></span>
+                    {% endfor %}
+                    {% for i in item.seller.empty_stars %}
+                    <span class="glyphicon glyphicon-star-empty"></span>
+                    {% endfor %}
+                </span>
+                <br>
+                <button type="button" class="btn btn-default">Directory</button>
+                <button type="button" class="btn btn-default">Contact</button>
+            </div>
+        </div>
+        <div id="right-col" class="pull-right">
+            <ul id="item-list">
+                <li>
+                    {% include 'item_detail_panel.html' %}
+                </li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+{% endblock %}

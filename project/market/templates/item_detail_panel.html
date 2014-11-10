@@ -1,0 +1,52 @@
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <p class="item-category panel-title pull-left">{{item.category}}</p>
+                                                <button type="button" class="btn btn-danger pull-right">Buy This!</button>
+                                                <button type="button" class="btn btn-default pull-right">Ask Question</button>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="item-left-col {% if not item.pics %}nopic{% endif %}">
+                                                    <p class="item-photo">
+                                                        {% if item.pics %}
+                                                        <img src="{{item.pics|first}}">
+                                                        {% endif %}
+                                                    </p>
+                                                    <ul class="item-photo-list">
+                                                        {% for pic in item.pics %}
+                                                        <li><img src="{{pic}}"></li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                                <div class="item-right-col {% if not item.pics %}nopic{% endif %}">
+                                                    <h3 class="item-title {% if not item.pics %}nopic{% endif %}">{{item.name}}</h3>
+                                                    {% if item.is_auction %}
+                                                    <span class="item-price {% if not item.pics %}nopic{% endif %}">Current bid: <span>${{item.current_price}}</span> by {{item.last_bidder.name}}</span><br>
+                                                    <span class="item-price {% if not item.pics %}nopic{% endif %}">{{item.end_time|timeuntil}} left ({{item.end_time|date:"m/d/Y H:i"}})</span>
+                                                    {% else %}
+                                                    <span class="item-price {% if not item.pics %}nopic{% endif %}">Price: <span>${{item.price}}</span></span>
+                                                    {% endif %}
+                                                    <p class="item-andrew-id {% if not item.pics %}nopic{% endif %}">{{item.seller.name}} posted at {{item.start_time|date:"m/d/Y H:i"}}</p>
+                                                    <p class="item-description {% if not item.pics %}nopic{% endif %}">
+                                                        {{item.description|linebreaksbr}}
+                                                    </p>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                                <div class="item-qa">
+                                                    <h4>Item QA</h4>
+                                                    <ul>
+                                                        {% for qa in item.qas %}
+                                                        <li>
+                                                            <span class="item-qa-sign">Q:</span>
+                                                            <span>{{qa.q}}</span>
+                                                            {% if qa.a %}
+                                                            <br>
+                                                            <span class="item-qa-sign">A:</span>
+                                                            <span>{{qa.a}}</span>
+                                                            {% endif %}
+                                                        </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
