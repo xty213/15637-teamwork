@@ -2,7 +2,7 @@ $(document).ready(function() {
     $("#forget-pwd-link").click(function(){
         alertify.prompt("Retrieve Your Password", function (e, str) {
             if (e) {
-                $.get("{% url 'FILL_THIS' %}", {'username':str}, function(data){
+                $.get("/send_verification_email", {'username':str}, function(data){
                     if (data != 'success'){
                         alertify.alert("An error occured. Please check your AndrewID.");
                     } else {

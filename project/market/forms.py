@@ -25,6 +25,22 @@ class RegisterForm(forms.Form):
         return username
 
 
+class ResetPasswordForm(forms.Form):
+    password = forms.CharField()
+    password2 = forms.CharField()
+
+    def clean(self):
+        cleaned_data = super(ResetPasswordForm, self).clean()
+
+        password = cleaned_data.get('password')
+        password2 = cleaned_data.get('password2')
+
+        if not password == password2:
+            raise forms.ValidationError('Passwords did not match.')
+
+        return cleaned_data
+
+
 class PostItemForm(forms.Form):
     name = forms.CharField(max_length=128)
     category = forms.IntegerField(required=True)

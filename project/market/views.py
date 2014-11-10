@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
-from django.http import Http404
+from django.http import HttpResponse, Http404
 
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.decorators import login_required
@@ -68,6 +68,55 @@ def confirm_registration(request, username, token):
     login(request, user)
 
     return redirect(reverse('home'))
+
+
+def send_verification_email(request):
+    if not 'username' in request.GET:
+        raise Http404
+
+    user = get_object_or_404(User, username=request.GET['username'])
+
+    token = default_token_generator.make_token(user)
+    email_body = """
+Please click the following link to reset your password:
+http://%s%s
+""" % (request.get_host(), reverse('reset_password', args=[user.username, token]))
+
+    send_mail(subject='Reset your password',
+              message=email_body,
+              from_email='noreply.OFM.CMU@gmail.com',
+              recipient_list=[user.email])
+
+    return HttpResponse('success')
+
+
+def reset_password(request, username, token):
+    context = {}
+    errors = []
+    context['errors'] = errors
+    context['page_title'] = 'Reset password'
+    context['username'] = username
+    context['token'] = token
+
+    user = get_object_or_404(User, username=username)
+
+    if not default_token_generator.check_token(user, token):
+        raise Http404
+
+    if request.method == 'GET':
+        return render(request, 'reset_password.html', context)
+
+    form = ResetPasswordForm(request.POST)
+    if not form.is_valid():
+        for field, form_errors in form.errors.items():
+            for error in form_errors:
+                errors.append(error)
+        return render(request, 'reset_password.html', context)
+
+    user.set_password(form.cleaned_data.get('password'))
+    user.save()
+
+    return redirect(reverse('login'))
 
 
 @login_required
