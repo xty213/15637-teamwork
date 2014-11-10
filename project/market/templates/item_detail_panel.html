@@ -21,7 +21,11 @@
                                                 <div class="item-right-col {% if not item.pics %}nopic{% endif %}">
                                                     <h3 class="item-title {% if not item.pics %}nopic{% endif %}">{{item.name}}</h3>
                                                     {% if item.is_auction %}
-                                                    <span class="item-price {% if not item.pics %}nopic{% endif %}">Current bid: <span>${{item.current_price}}</span> by {{item.last_bidder.name}}</span><br>
+                                                    {% if item.bid_log %}
+                                                    <span class="item-price {% if not item.pics %}nopic{% endif %}">Current bid: <span>${{item.bid_log.0.price}}</span> by {{item.bid_log.0.bidder.name}}</span><br>
+                                                    {% else %}
+                                                    <span class="item-price {% if not item.pics %}nopic{% endif %}">Current bid: <span>${{item.price}}</span> by Nobody</span><br>
+                                                    {% endif %}
                                                     <span class="item-price {% if not item.pics %}nopic{% endif %}">{{item.end_time|timeuntil}} left ({{item.end_time|date:"m/d/Y H:i"}})</span>
                                                     {% else %}
                                                     <span class="item-price {% if not item.pics %}nopic{% endif %}">Price: <span>${{item.price}}</span></span>
@@ -32,6 +36,17 @@
                                                     </p>
                                                 </div>
                                                 <div class="clearfix"></div>
+                                                {% if item.is_auction %}
+                                                <div class="item-bidding-hist">
+                                                    <h4>Bidding History</h4>
+                                                    <table class="table table-striped table-condensed">
+                                                        <tr><th>Bidder</th><th>Bid Amount</th><th>Bid Time</th></tr>
+                                                        {% for bid in item.bid_log %}
+                                                        <tr><td>{{bid.bidder.name}}</td><td>${{bid.price}}</td><td>{{bid.time|date:"m/d/Y H:i"}}</td></tr>
+                                                        {% endfor %}
+                                                    </table>
+                                                </div>
+                                                {% end if %}
                                                 <div class="item-qa">
                                                     <h4>Item QA</h4>
                                                     <ul>
