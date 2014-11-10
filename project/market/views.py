@@ -10,6 +10,8 @@ from django.core.urlresolvers import reverse
 
 from forms import *
 from models import *
+from tools import *
+from datetime import datetime
 
 
 def register(request):
@@ -81,9 +83,23 @@ def buyer_view(request):
 @login_required
 def item_detail(request, id):
     context = {'mode': 'buyer_view'}
-    item = {'pics':['/static/img/item1_1.jpg', '/static/img/item1_2.jpg'], 'description':'hahahahahahahahah', 'category':'Apps & Games', 'name': 'WeChat', 'is_auction': False, 'price': 30, 'start_time':datetime.now(), 'seller':{'name':'hquan', 'stars':xrange(3), 'empty_stars':xrange(2)}}
-    item['qas'] = [{'q':'Hello', 'a':'Hi'}, {'q':'No answer'}]
+    item = {}
     context['item'] = item
+
+    item_obj = get_object_or_404(Item, id=id)
+    seller_obj = item_obj.transaction.seller
+
+    seller = {'name':seller_obj.username}
+    item['seller'] = seller
+
+    item['category'] = category_converter(item_obj.category)
+    item['name'] = item_obj.name
+    item['is_auction'] = item_obj.transaction.is_auction
+    item['price'] = item_obj.transaction.deal_price
+    item['start_time'] = item_obj.transaction.start_time
+    item['end_time'] = item_obj.transaction.end_time
+    item['description'] = item_obj.description
+
     return render(request, 'item_detail.html', context)
 
 

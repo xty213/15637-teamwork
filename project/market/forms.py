@@ -27,7 +27,7 @@ class RegisterForm(forms.Form):
 
 class PostItemForm(forms.Form):
     name = forms.CharField(max_length=128)
-    category = forms.IntegerField()
+    category = forms.IntegerField(required=True)
     mode = forms.CharField(max_length=10)
     price = forms.FloatField()
     endtime = forms.DateTimeField(required=False)
