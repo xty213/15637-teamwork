@@ -72,9 +72,13 @@ def confirm_registration(request, username, token):
 
 def send_verification_email(request):
     if not 'username' in request.GET:
-        raise Http404
+        return HttpResponse('missing username')
 
-    user = get_object_or_404(User, username=request.GET['username'])
+    user = None
+    try:
+        user = User.objects.get(username__exact=request.GET['username'])
+    except User.DoesNotExist:
+        return HttpResponse('invalid username')
 
     token = default_token_generator.make_token(user)
     email_body = """
