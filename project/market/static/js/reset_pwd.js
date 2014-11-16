@@ -1,15 +1,21 @@
 $(document).ready(function() {
     $("#forget-pwd-link").click(function(){
-        alertify.prompt("Retrieve Your Password", function (e, str) {
-            if (e) {
+        swal({
+            title: "Retrieve Your Password",
+            text: "Please enter your AndrewID",
+            type: "info",
+            showCancelButton: true,
+            confirmButtonText: 'Ok',
+            inputField: true,
+            },
+            function(str){
                 $.get("/send_verification_email", {'username':str}, function(data){
                     if (data != 'success'){
-                        alertify.alert("An error occured. Please check your AndrewID.");
+                        swal("An error occured...", "Please enter a valid AndrewID.", "error");
                     } else {
-                        alertify.alert("A verification link has been send to you. Please check your email.");
+                        swal("Almost there!", "A verification link has been send to you.\nPlease check your email.", "success");
                     }
                 });
-            }
-        }, "Please enter your AndrewID");
+        });
     });
 });
