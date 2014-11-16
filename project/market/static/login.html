@@ -5,6 +5,7 @@
     <title>Online Flea Market - Login</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/unlogged.css">
+    <link rel="stylesheet" href="css/sweet-alert.css">
 </head>
 <body>
     <div id="header"></div>
@@ -22,28 +23,29 @@
             <button id="login-btn" type="submit" class="btn btn-block btn-lg btn-danger">Go to the Market</button>
         </form>
         <div id="left-col" class="pull-left">New customer<br><a href="#">Sign up now</a></div>
-        <div id="right-col" class="pull-right"><input type="checkbox"> Remember me<br><a data-toggle="modal" href="#forget-password">Forget password</a></div>
-    </div>
-
-    <div class="modal fade" id="forget-password" tabindex="-1" role="dialog" aria-labelledby="forgetPassword" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title">Forget password</h4>
-                </div>
-                <div class="modal-body">
-                    <p>Please enter your AndrewID, a verification email will be sent to you.</p>
-                    <input id="forget-password-andrewid" class="form-control" autocomplete="off">
-                </div>
-                <div class="modal-footer">
-                    <button id="forget-password-submit-btn" type="button" class="btn btn-danger">Submit</button>
-                </div>
-            </div>
-        </div>
+        <div id="right-col" class="pull-right"><input type="checkbox"> Remember me<br><a id="forget-pwd" href="#forget-password">Forget password</a></div>
     </div>
 
     <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/sweet-alert.js"></script>
+    <script>
+    $("#forget-pwd").click(function(){
+        swal({
+            title: "Retrieve Your Password",
+            text: "Please enter your AndrewID",
+            type: "info",
+            showCancelButton: true,
+            confirmButtonText: 'Ok',
+            inputField: true,
+            },
+            function(input){
+                if (input)
+                    swal("Almost there, " + input + "!", "A verification link has been send to you.\nPlease check your email.", "success");
+                else
+                    swal("An error occured...", "Please enter a valid AndrewID.", "error");
+        });
+    });
+    </script>
 </body>
 </html>
