@@ -270,6 +270,19 @@ def seller_view(request):
 @login_required
 def my_account(request):
     context = {'mode':'my_account'}
+    transcations_bought = []
+    context['transcations_bought'] = transcations_bought
+    transcations_sold = []
+    context['transcations_sold'] = transcations_sold
+
+    for trans in Transaction.objects.filter(buyer__exact=request.user):
+        trans.deal_price /= 100.0
+        transcations_bought.append(trans)
+
+    for trans in Transaction.objects.filter(seller__exact=request.user):
+        trans.deal_price /= 100.0
+        transcations_sold.append(trans)
+
     return render(request, 'my_account.html', context)
 
 @login_required

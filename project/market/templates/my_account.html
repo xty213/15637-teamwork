@@ -24,14 +24,14 @@
                             <caption>Items you bought</caption>
                             <tr><th>Item</th><th>Deal Price</th><th>Deal Time</th><th>Recieved Rate</th><th>Rate on Seller</th></tr>
                             {% for transaction in transcations_bought %}
-                            <tr><td><a href="#">{{transaction.item.name}}</a></td><td>${{transaction.item.price}}</td><td>{{transaction.item.end_time|date:"m/d/Y H:i"}}</td><td>{% if transaction.seller_rate %}{{transaction.seller_rate}}/5{% else %}N/A{% endif %}</td><td>{% if transaction.buyer_rate %}{{transaction.buyer_rate}}/5{% else %}<button class="btn btn-default btn-xs">Rate Now</button>{% endif %}</td></tr>
+                            <tr><td><a href="{% url 'item_detail' transaction.item.id %}">{{transaction.item.name}}</a></td><td>${{transaction.deal_price|floatformat:2}}</td><td>{{transaction.deal_time|date:"m/d/Y H:i"}}</td><td>{% if transaction.seller_rate %}{{transaction.seller_rate}}/5{% else %}N/A{% endif %}</td><td>{% if transaction.buyer_rate %}{{transaction.buyer_rate}}/5{% elif transaction.is_closed %}<button class="btn btn-default btn-xs">Rate Now</button>{% else %}N/A{% endif %}</td></tr>
                             {% endfor %}
                         </table>
                         <table class="table table-hover">
-                            <caption>Items you sold</caption>
+                            <caption>Items you sold or are selling</caption>
                             <tr><th>Item</th><th>Deal Price</th><th>Deal Time</th><th>Recieved Rate</th><th>Rate on Buyer</th></tr>
                             {% for transaction in transcations_sold %}
-                            <tr><td><a href="#">{{transaction.item.name}}</a></td><td>${{transaction.item.price}}</td><td>{{transaction.item.end_time|date:"m/d/Y H:i"}}</td><td>{% if transaction.buyer_rate %}{{transaction.buyer_rate}}/5{% else %}N/A{% endif %}</td><td>{% if transaction.seller_rate %}{{transaction.seller_rate}}/5{% else %}<button class="btn btn-default btn-xs">Rate Now</button>{% endif %}</td></tr>
+                            <tr><td><a href="{% url 'item_detail' transaction.item.id %}">{{transaction.item.name}}</a></td><td>${{transaction.deal_price|floatformat:2}}</td><td>{{transaction.deal_time|date:"m/d/Y H:i"}}</td><td>{% if transaction.buyer_rate %}{{transaction.buyer_rate}}/5{% else %}N/A{% endif %}</td><td>{% if transaction.seller_rate %}{{transaction.seller_rate}}/5{% elif transaction.is_closed %}<button class="btn btn-default btn-xs">Rate Now</button>{% else %}N/A{% endif %}</td></tr>
                             {% endfor %}
                         </table>
                     </div>
