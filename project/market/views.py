@@ -465,6 +465,12 @@ def search(request):
             item['seller'] = {'name':item_obj.transaction.seller.username}
             item['description'] = item_obj.description
 
+            bid_logs = list(item_obj.transaction.bid_logs.all())
+            bid_logs.sort(key=lambda x:x.bid_price, reverse=True)
+            item['bid_log'] = map(lambda x:{'bidder':x.user,
+                                            'price':"%.2f" % (float(x.bid_price) / 100),
+                                            'time':x.bid_time}, bid_logs)
+
             pics = []
             if item_obj.pic1:
                 pics.append("/media/item/%d/1" % item_obj.id)

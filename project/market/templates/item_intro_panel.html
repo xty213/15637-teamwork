@@ -21,9 +21,9 @@
                                                     <h3 class="item-title {% if not item.pics %}nopic{% endif %}">{{item.name}}</h3>
                                                     {% if item.is_auction %}
                                                     {% if item.bid_log %}
-                                                    <span class="item-price {% if not item.pics %}nopic{% endif %}">Current bid: <span class="curr-price">${{item.bid_log.0.price}}</span> by {{item.bid_log.0.bidder.name}}</span><br>
+                                                    <span class="item-price {% if not item.pics %}nopic{% endif %}">Current bid: <span class="curr-price">${{item.bid_log.0.price}}</span> by {{item.bid_log.0.bidder.username}}</span><br>
                                                     {% else %}
-                                                    <span class="item-price {% if not item.pics %}nopic{% endif %}">Current bid: <span class="curr-price">${{item.price}}</span> by Nobody</span><br>
+                                                    <span class="item-price {% if not item.pics %}nopic{% endif %}">Current bid: <span class="curr-price">${{item.price}}</span> by the seller</span><br>
                                                     {% endif %}
                                                     <span class="item-price {% if not item.pics %}nopic{% endif %}">{{item.end_time|timeuntil}} left ({{item.end_time|date:"m/d/Y H:i"}})</span>
                                                     {% else %}
