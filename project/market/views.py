@@ -316,6 +316,55 @@ def answer_question(request):
 
     return HttpResponse('success')
 
+@login_required
 def search(request):
-    #TODO
-    return HttpResponse()
+    if not 'keyword' in request.GET:
+        raise Http404
+
+    if not 'mode' in request.GET or not (request.GET['mode'] == 'items' or request.GET['mode'] == 'demands'):
+        raise Http404
+
+    if not 'category' in request.GET or not 0 <= int(request.GET['category']) <= 15:
+        raise Http404
+
+    context = {'mode': 'buyer_view'}
+
+
+    if request.GET['mode'] == 'items':
+        items = []
+        context['items'] = items
+        if not request.GET['keyword']:
+            if int(request.GET['category']) == 0:
+                item_objs = Item.objects.all()
+            else:
+                item_objs = Item.objects.filter(category__exact=request.GET['category'])
+        else:
+            if int(request.GET['category']) == 0:
+                item_objs = Item.objects.filter(name__contains=request.GET['keyword']) \
+                    | Item.objects.filter(description__contains=request.GET['keyword'])
+            else:
+                item_objs = Item.objects.filter(name__contains=request.GET['keyword']).filter(category__exact=request.GET['category']) \
+                    | Item.objects.filter(description__contains=request.GET['keyword']).filter(category__exact=request.GET['category'])
+
+        for item_obj in item_objs:
+            item = {}
+            item['id'] = item_obj.id
+            item['category'] = category_converter(item_obj.category)
+            item['name'] = item_obj.name
+            item['is_auction'] = item_obj.transaction.is_auction
+            item['price'] = '%.2f' % (item_obj.transaction.deal_price / 100.0)
+            item['start_time'] = item_obj.transaction.start_time
+            item['end_time'] = item_obj.transaction.end_time
+            item['seller'] = {'name':item_obj.transaction.seller.username}
+            item['description'] = item_obj.description
+
+            items.append(item)
+
+        items.sort(key=lambda x:x['start_time'], reverse=True)
+
+        return render(request, 'search_item.html', context)
+
+    # TODO
+    if request.GET['mode'] == 'demands':
+        raise Http404
+
