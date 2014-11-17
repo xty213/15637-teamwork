@@ -445,6 +445,11 @@ def rate(request):
     if not 'rate' in request.POST or not request.POST['rate']:
         return HttpResponse('missing rate')
 
+    try:
+        int(request.POST['rate'])
+    except ValueError:
+        return HttpResponse('invalid rate')
+
     if not 1 <= int(request.POST['rate']) <= 5:
         return HttpResponse('invalid rate')
 
@@ -457,13 +462,13 @@ def rate(request):
     if request.POST['mode'] == 'rate_on_buyer':
         if not item.transaction.is_closed:
             return HttpResponse('transaction is still open')
-        if not item.transcation.seller.username == request.user.username:
+        if not item.transaction.seller.username == request.user.username:
             return HttpResponse('you are not the seller')
         if item.transaction.seller_rate:
             return HttpResponse('this transaction has been rated')
 
-        item.transcation.seller_rate = int(request.POST['rate'])
-        item.transcation.save()
+        item.transaction.seller_rate = int(request.POST['rate'])
+        item.transaction.save()
 
     else:
         if not item.transaction.is_closed:
