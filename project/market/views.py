@@ -465,6 +465,17 @@ def search(request):
             item['seller'] = {'name':item_obj.transaction.seller.username}
             item['description'] = item_obj.description
 
+            pics = []
+            if item_obj.pic1:
+                pics.append("/media/item/%d/1" % item_obj.id)
+            if item_obj.pic2:
+                pics.append("/media/item/%d/2" % item_obj.id)
+            if item_obj.pic3:
+                pics.append("/media/item/%d/3" % item_obj.id)
+            if item_obj.pic4:
+                pics.append("/media/item/%d/4" % item_obj.id)
+            item['pics'] = pics
+
             items.append(item)
 
         items.sort(key=lambda x:x['start_time'], reverse=True)
