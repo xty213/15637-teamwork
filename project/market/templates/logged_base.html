@@ -14,30 +14,33 @@
             <a id="header-logo" href="/" title="Online Flea Market" class="pull-left">Online Flea Market</a>
             <div id="header-search" class="input-group input-group-sm pull-left">
                 <div class="input-group-btn">
-                    <button id="selected-category" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">All Category <span class="caret"></span></button>
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span id="selected_category">All Category</span> <span class="caret"></span></button>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="#">All Category</a></li>
+                            <li><a href="#" value="0">All Category</a></li>
                             <li class="divider"></li>
-                            <li><a href="#">Apps &amp; Games</a></li>
-                            <li><a href="#">Arts &amp; Crafts</a></li>
-                            <li><a href="#">Books</a></li>
-                            <li><a href="#">Cell Phones</a></li>
-                            <li><a href="#">Clothing</a></li>
-                            <li><a href="#">Computers</a></li>
-                            <li><a href="#">Electronics</a></li>
-                            <li><a href="#">Foods</a></li>
-                            <li><a href="#">Gift Cards</a></li>
-                            <li><a href="#">Health</a></li>
-                            <li><a href="#">Musical Inst</a></li>
-                            <li><a href="#">Office</a></li>
-                            <li><a href="#">Software</a></li>
-                            <li><a href="#">Sports</a></li>
-                            <li><a href="#">Tools</a></li>
+                            <li><a href="#" value="1">Apps &amp; Games</a></li>
+                            <li><a href="#" value="2">Arts &amp; Crafts</a></li>
+                            <li><a href="#" value="3">Books</a></li>
+                            <li><a href="#" value="4">Cell Phones</a></li>
+                            <li><a href="#" value="5">Clothing</a></li>
+                            <li><a href="#" value="6">Computers</a></li>
+                            <li><a href="#" value="7">Electronics</a></li>
+                            <li><a href="#" value="8">Foods</a></li>
+                            <li><a href="#" value="9">Gift Cards</a></li>
+                            <li><a href="#" value="10">Health</a></li>
+                            <li><a href="#" value="11">Musical Inst</a></li>
+                            <li><a href="#" value="12">Office</a></li>
+                            <li><a href="#" value="13">Software</a></li>
+                            <li><a href="#" value="14">Sports</a></li>
+                            <li><a href="#" value="15">Tools</a></li>
                         </ul>
                 </div>
-                <input type="text" class="form-control">
+                <form id="search-form" method="get" action="{% url 'search' %}"></form>
+                <input type="text" name="keyword" class="form-control" form="search-form">
+                <input type="hidden" name="mode" value="{% if mode == 'seller_view' %}demands{% else %}items{% endif %}" form="search-form">
+                <input type="hidden" name="category" value="0" form="search-form">
                 <span class="input-group-btn">
-                    <button class="btn btn-default" type="button">Search {% if mode == 'seller_view' %}Demands{% else %}Items{% endif %}</button>
+                    <button class="btn btn-default" type="submit" form="search-form">Search {% if mode == 'seller_view' %}Demands{% else %}Items{% endif %}</button>
                 </span>
             </div>
             <ul id="header-nav" class="pull-right">
@@ -57,6 +60,7 @@
     <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
     <script src="/static/js/sidebar.js"></script>
+    <script src="/static/js/search.js"></script>
     <script src="/static/js/sweet-alert.js"></script>
     <script src="/static/js/view_items.js"></script>
     {% block additional_js %}{% endblock %}

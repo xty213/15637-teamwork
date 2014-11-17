@@ -266,3 +266,8 @@ def seller_view(request):
 def my_account(request):
     context = {'mode':'my_account'}
     return render(request, 'my_account.html', context)
+
+@login_required
+def search(request):
+    #TODO
+    return HttpResponse()

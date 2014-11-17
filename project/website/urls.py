@@ -21,4 +21,5 @@ urlpatterns = patterns('',
     url(r'^my_account/$', views.my_account, name='my_account'),
     url(r'^post_item/$', views.post_item, name='post_item'),
     url(r'^buy_fixed_price_item/$', views.buy_fixed_price_item, name='buy_fixed_price_item'),
+    url(r'^search/$', views.search, name='search'),
 )
