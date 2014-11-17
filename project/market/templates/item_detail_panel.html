@@ -9,7 +9,7 @@
                                                         <form id="form-place_bid" method="post" action="">
                                                             <input type="hidden" name="itemid" value="{{item.id}}">
                                                             {% csrf_token %}
-                                                            <button type="submit" class="btn btn-danger pull-right">Place Bid!</button>
+                                                            <button type="submit" class="btn btn-danger pull-right" {% if item.disable_btn %}disabled="disabled"{% endif %}>Place Bid!</button>
                                                         </form>
                                                         {% else %}
                                                         <form id="form-fixed-price" method="post" action="{% url 'buy_fixed_price_item' %}">
