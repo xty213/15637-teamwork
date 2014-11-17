@@ -1,0 +1,51 @@
+{% extends 'logged_base.html' %}
+
+{% block main_content %}
+        <div id="left-col" class="pull-left">
+            <div id="left-nav">
+                <h2>Category</h2>
+                <ul>
+                    <li><a href="{% url 'buyer_view' 1 %}">Apps &amp; Games</a></li>
+                    <li><a href="{% url 'buyer_view' 2 %}">Arts &amp; Crafts</a></li>
+                    <li><a href="{% url 'buyer_view' 3 %}">Books</a></li>
+                    <li><a href="{% url 'buyer_view' 4 %}">Cell Phones</a></li>
+                    <li><a href="{% url 'buyer_view' 5 %}">Clothing</a></li>
+                    <li><a href="{% url 'buyer_view' 6 %}">Computers</a></li>
+                    <li><a href="{% url 'buyer_view' 7 %}">Electronics</a></li>
+                    <li><a href="{% url 'buyer_view' 8 %}">Foods</a></li>
+                    <li><a href="{% url 'buyer_view' 9 %}">Gift Cards</a></li>
+                    <li><a href="{% url 'buyer_view' 10 %}">Health</a></li>
+                    <li><a href="{% url 'buyer_view' 11 %}">Musical Inst</a></li>
+                    <li><a href="{% url 'buyer_view' 12 %}">Office</a></li>
+                    <li><a href="{% url 'buyer_view' 13 %}">Software</a></li>
+                    <li><a href="{% url 'buyer_view' 14 %}">Sports</a></li>
+                    <li><a href="{% url 'buyer_view' 15 %}">Tools</a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="right-col" class="pull-right container">
+            <div class="row">
+                <div class="span12">
+                    <div class="tabbable">
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a href="#item-list-panel" data-toggle="tab">Item List</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="item-list-panel">
+                                <ul id="item-list">
+                                    {% for item in items %}
+                                    <li>
+                                        {% include 'item_intro_panel.html' %}
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+{% endblock %}
