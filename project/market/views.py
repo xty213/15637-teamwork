@@ -153,7 +153,7 @@ def buyer_view(request, id='0'):
 
         items.append(item)
 
-    items.sort(key=lambda x:float(x['price']))
+    items.sort(key=lambda x:x['start_time'], reverse=True)
 
     return render(request, 'buyer_view.html', context)
 
