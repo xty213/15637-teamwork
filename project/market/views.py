@@ -182,6 +182,9 @@ def item_detail(request, id):
     item['description'] = item_obj.description
     item['disable_btn'] = item_obj.transaction.seller == request.user
 
+    qas = map(lambda x:{'q':x.query, 'a':x.answer}, item_obj.questions.all())
+    item['qas'] = qas
+
     return render(request, 'item_detail.html', context)
 
 
@@ -266,3 +269,25 @@ def seller_view(request):
 def my_account(request):
     context = {'mode':'my_account'}
     return render(request, 'my_account.html', context)
+
+@login_required
+def ask_question(request):
+    if not 'itemid' in request.POST or not request.POST['itemid']:
+        return HttpResponse('missing itemid')
+
+    if not 'question' in request.POST or not request.POST['question']:
+        return HttpResponse('missing question')
+
+    item = None
+    try:
+        item = Item.objects.get(id__exact=request.POST['itemid'])
+    except Item.DoesNotExist:
+        return HttpResponse('invalid itemid')
+
+    if item.transaction.seller.username == request.user.username:
+        return HttpResponse('the seller cannot ask himself a question')
+
+    question = ItemQuestions(query=request.POST['question'], item=item)
+    question.save()
+
+    return HttpResponse('success')
