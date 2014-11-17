@@ -129,12 +129,15 @@ def home(request):
 
 
 @login_required
-def buyer_view(request):
+def buyer_view(request, id='0'):
     context = {'mode': 'buyer_view'}
     items = []
     context['items'] = items
 
-    item_objs = Item.objects.all()
+    if id == '0':
+        item_objs = Item.objects.all()
+    else:
+        item_objs = Item.objects.filter(category__exact=id)
 
     for item_obj in item_objs:
         item = {}
