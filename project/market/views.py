@@ -223,7 +223,7 @@ def buy_fixed_price_item(request):
     if not 'itemid' in request.POST or not request.POST["itemid"]:
         return HttpResponse('missing itemid')
 
-    if not 'itemid' in request.POST:
+    if not 'msg' in request.POST:
         return HttpResponse('missing message')
 
     item = None
