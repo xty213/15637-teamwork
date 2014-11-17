@@ -49,7 +49,7 @@
                                                     {% if item.bid_log %}
                                                     <span class="item-price {% if not item.pics %}nopic{% endif %}">Current bid: <span id="curr_bid">${{item.bid_log.0.price}}</span> by <span id="curr_bidder">{{item.bid_log.0.bidder.username}}</span></span><br>
                                                     {% else %}
-                                                    <span class="item-price {% if not item.pics %}nopic{% endif %}">Current bid: <span id="curr_bid">${{item.price}}</span> by <span id="curr_bidder">the seller (starting price)</span></span><br>
+                                                    <span class="item-price {% if not item.pics %}nopic{% endif %}">Current bid: <span id="curr_bid">${{item.price}}</span> by <span id="curr_bidder">the seller</span></span><br>
                                                     {% endif %}
                                                     <span class="item-price {% if not item.pics %}nopic{% endif %}">{{item.end_time|timeuntil}} left ({{item.end_time|date:"m/d/Y H:i"}})</span>
                                                     {% else %}
