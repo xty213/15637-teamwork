@@ -183,9 +183,16 @@ def item_detail(request, id):
     item['end_time'] = item_obj.transaction.end_time
     item['description'] = item_obj.description
     item['sold_by_curr_user'] = item_obj.transaction.seller == request.user
+    item['curr_username'] = request.user.username
 
     qas = map(lambda x:{'q':x.query, 'a':x.answer, 'id':x.id}, item_obj.questions.all())
     item['qas'] = qas
+
+    bid_logs = list(item_obj.transaction.bid_logs.all())
+    bid_logs.sort(key=lambda x:x.bid_price, reverse=True)
+    item['bid_log'] = map(lambda x:{'bidder':x.user,
+                                    'price':"%.2f" % (float(x.bid_price) / 100),
+                                    'time':x.bid_time}, bid_logs)
 
     return render(request, 'item_detail.html', context)
 
@@ -259,6 +266,44 @@ The buyer left the following message:
               message=email_body,
               from_email='noreply.OFM.CMU@gmail.com',
               recipient_list=[item.transaction.seller.email])
+
+    return HttpResponse('success')
+
+@login_required
+def place_bid(request):
+    if not 'itemid' in request.POST or not request.POST["itemid"]:
+        return HttpResponse('missing itemid')
+
+    if not 'price' in request.POST or not request.POST["price"]:
+        return HttpResponse('missing bidding price')
+
+    price = 0
+    try:
+        price = int(float(request.POST["price"]) * 100)
+    except ValueError:
+        return HttpResponse('invalid bidding price')
+
+    item = None
+    try:
+        item = Item.objects.get(id__exact=request.POST["itemid"])
+    except Item.DoesNotExist:
+        return HttpResponse('invalid itemid')
+
+    trans = item.transaction
+
+    if trans.seller.username == request.user.username:
+        return HttpResponse('the seller cannot be the buyer')
+
+    if price - trans.deal_price < 50:
+        return HttpResponse('the bid is too low')
+
+    trans.deal_price = price
+    trans.save()
+
+    log = BidLog(bid_price=price,
+                user=request.user,
+                transaction=trans,)
+    log.save()
 
     return HttpResponse('success')
 

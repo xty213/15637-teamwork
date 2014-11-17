@@ -6,8 +6,10 @@
                                                 {% else %}
                                                     <div id="heading-btn-group">
                                                         {% if item.is_auction %}
-                                                        <form id="form-place-bid" method="post" action="">
+                                                        <form id="form-place-bid" method="post" action="{% url 'place_bid' %}">
                                                             <input type="hidden" name="itemid" value="{{item.id}}">
+                                                            <input type="hidden" name="bid_price" value="">
+                                                            <input type="hidden" name="curr_user" value="{{item.curr_username}}">
                                                             {% csrf_token %}
                                                             <button type="submit" class="btn btn-danger pull-right" {% if item.sold_by_curr_user %}disabled="disabled"{% endif %}>Place Bid!</button>
                                                         </form>
@@ -45,9 +47,9 @@
                                                     <h3 class="item-title {% if not item.pics %}nopic{% endif %}">{{item.name}}</h3>
                                                     {% if item.is_auction %}
                                                     {% if item.bid_log %}
-                                                    <span class="item-price {% if not item.pics %}nopic{% endif %}">Current bid: <span>${{item.bid_log.0.price}}</span> by {{item.bid_log.0.bidder.name}}</span><br>
+                                                    <span class="item-price {% if not item.pics %}nopic{% endif %}">Current bid: <span id="curr_bid">${{item.bid_log.0.price}}</span> by <span id="curr_bidder">{{item.bid_log.0.bidder.username}}</span></span><br>
                                                     {% else %}
-                                                    <span class="item-price {% if not item.pics %}nopic{% endif %}">Current bid: <span>${{item.price}}</span> by the seller (starting price)</span><br>
+                                                    <span class="item-price {% if not item.pics %}nopic{% endif %}">Current bid: <span id="curr_bid">${{item.price}}</span> by <span id="curr_bidder">the seller (starting price)</span></span><br>
                                                     {% endif %}
                                                     <span class="item-price {% if not item.pics %}nopic{% endif %}">{{item.end_time|timeuntil}} left ({{item.end_time|date:"m/d/Y H:i"}})</span>
                                                     {% else %}
@@ -66,7 +68,7 @@
                                                     <table class="table table-striped table-condensed">
                                                         <tr><th>Bidder</th><th>Bid Amount</th><th>Bid Time</th></tr>
                                                         {% for bid in item.bid_log %}
-                                                        <tr><td>{{bid.bidder.name}}</td><td>${{bid.price}}</td><td>{{bid.time|date:"m/d/Y H:i"}}</td></tr>
+                                                        <tr><td>{{bid.bidder.username}}</td><td>${{bid.price}}</td><td>{{bid.time|date:"m/d/Y H:i"}}</td></tr>
                                                         {% endfor %}
                                                     </table>
                                                     {% else %}
