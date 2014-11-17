@@ -177,6 +177,7 @@ def item_detail(request, id):
     item['start_time'] = item_obj.transaction.start_time
     item['end_time'] = item_obj.transaction.end_time
     item['description'] = item_obj.description
+    item['disable_btn'] = item_obj.transaction.seller == request.user
 
     return render(request, 'item_detail.html', context)
 

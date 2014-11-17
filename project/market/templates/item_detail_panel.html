@@ -6,15 +6,19 @@
                                                 {% else %}
                                                     <div id="heading-btn-group">
                                                         {% if item.is_auction %}
-                                                        <button type="button" class="btn btn-danger pull-right btn-place-bid">Place Bid!</button>
+                                                        <form id="form-place_bid" method="post" action="">
+                                                            <input type="hidden" name="itemid" value="{{item.id}}">
+                                                            {% csrf_token %}
+                                                            <button type="submit" class="btn btn-danger pull-right">Place Bid!</button>
+                                                        </form>
                                                         {% else %}
                                                         <form id="form-fixed-price" method="post" action="{% url 'buy_fixed_price_item' %}">
                                                             <input type="hidden" name="itemid" value="{{item.id}}">
                                                             {% csrf_token %}
-                                                            <button type="submit" class="btn btn-danger pull-right">Buy This!</button>
+                                                            <button type="submit" class="btn btn-danger pull-right" {% if item.disable_btn %}disabled="disabled"{% endif %}>Buy This!</button>
                                                         </form>
                                                         {% endif %}
-                                                        <button type="button" class="btn btn-default pull-right">Ask Question</button>
+                                                        <button type="button" class="btn btn-default pull-right" {% if item.disable_btn %}disabled="disabled"{% endif %}>Ask Question</button>
                                                     </div>
                                                 {% endif %} 
                                                 <div class="clearfix"></div>
@@ -38,7 +42,7 @@
                                                     {% if item.bid_log %}
                                                     <span class="item-price {% if not item.pics %}nopic{% endif %}">Current bid: <span>${{item.bid_log.0.price}}</span> by {{item.bid_log.0.bidder.name}}</span><br>
                                                     {% else %}
-                                                    <span class="item-price {% if not item.pics %}nopic{% endif %}">Current bid: <span>${{item.price}}</span> by Nobody</span><br>
+                                                    <span class="item-price {% if not item.pics %}nopic{% endif %}">Current bid: <span>${{item.price}}</span> by the seller (starting price)</span><br>
                                                     {% endif %}
                                                     <span class="item-price {% if not item.pics %}nopic{% endif %}">{{item.end_time|timeuntil}} left ({{item.end_time|date:"m/d/Y H:i"}})</span>
                                                     {% else %}
