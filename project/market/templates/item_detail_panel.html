@@ -53,7 +53,7 @@
                                                     {% endif %}
                                                     <span class="item-price {% if not item.pics %}nopic{% endif %}">{{item.end_time|timeuntil}} left ({{item.end_time|date:"m/d/Y H:i"}})</span>
                                                     {% else %}
-                                                    <span class="item-price {% if not item.pics %}nopic{% endif %}">Price: <span>${{item.price}}</span></span>
+                                                    <span class="item-price {% if not item.pics %}nopic{% endif %}">Price: <span class="curr-price">${{item.price}}</span></span>
                                                     {% endif %}
                                                     <p class="item-andrew-id {% if not item.pics %}nopic{% endif %}">{{item.seller.name}} posted at {{item.start_time|date:"m/d/Y H:i"}}</p>
                                                     <p class="item-description {% if not item.pics %}nopic{% endif %}">
