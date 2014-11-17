@@ -41,7 +41,7 @@
                 </span>
             </div>
             <ul id="header-nav" class="pull-right">
-                <li {% if mode == 'buyer_view' %}class="checked"{% endif %}><a href="{% url 'buyer_view' %}">Buyer View</a></li>
+                <li {% if mode == 'buyer_view' %}class="checked"{% endif %}><a href="{% url 'buyer_view' 0 %}">Buyer View</a></li>
                 <li {% if mode == 'seller_view' %}class="checked"{% endif %}><a href="{% url 'seller_view' %}">Seller View</a></li>
                 <li {% if mode == 'my_account' %}class="checked"{% endif %}><a href="{% url 'my_account' %}">My Account</a></li>
             </ul>
