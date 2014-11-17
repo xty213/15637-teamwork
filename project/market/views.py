@@ -291,3 +291,25 @@ def ask_question(request):
     question.save()
 
     return HttpResponse('success')
+
+@login_required
+def answer_question(request):
+    if not 'questionid' in request.POST or not request.POST['questionid']:
+        return HttpResponse('missing questionid')
+
+    if not 'answer' in request.POST or not request.POST['answer']:
+        return HttpResponse('missing answer')
+
+    question = None
+    try:
+        question = ItemQuestions.objects.get(id__exact=request.POST['questionid'])
+    except ItemQuestions.DoesNotExist:
+        return HttpResponse('invalid questionid')
+
+    if not question.item.transaction.seller.username == request.user.username:
+        return HttpResponse('nobody other than the seller can answer the question')
+
+    question.answer = request.POST['answer']
+    question.save()
+
+    return HttpResponse('success')
