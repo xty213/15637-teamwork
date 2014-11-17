@@ -46,7 +46,7 @@ class PostItemForm(forms.Form):
     category = forms.IntegerField(required=True)
     mode = forms.CharField(max_length=10)
     price = forms.FloatField()
-    endtime = forms.DateTimeField(required=False)
+    endtime = forms.DateTimeField(required=False, input_formats=["%Y/%m/%d %H:%M"])
     description = forms.CharField(max_length=1024, required=False)
 
     def clean(self):

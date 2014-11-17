@@ -202,6 +202,19 @@ def post_item(request):
                     category=form.cleaned_data.get('category'))
         item.save()
 
+    else:
+        transaction = Transaction(deal_price=(int(form.cleaned_data.get('price') * 100)),
+                                  seller=request.user,
+                                  end_time=form.cleaned_data.get('endtime'),
+                                  is_auction=True)
+        transaction.save()
+
+        item = Item(name=form.cleaned_data.get('name'),
+                    description=form.cleaned_data.get('description'),
+                    transaction=transaction,
+                    category=form.cleaned_data.get('category'))
+        item.save()
+
     return redirect(reverse('item_detail', args=[item.id]))
 
 @login_required
