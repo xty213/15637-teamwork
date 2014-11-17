@@ -48,6 +48,10 @@ class PostItemForm(forms.Form):
     price = forms.FloatField()
     endtime = forms.DateTimeField(required=False, input_formats=["%Y/%m/%d %H:%M"])
     description = forms.CharField(max_length=1024, required=False)
+    pic1 = forms.ImageField(required=False)
+    pic2 = forms.ImageField(required=False)
+    pic3 = forms.ImageField(required=False)
+    pic4 = forms.ImageField(required=False)
 
     def clean(self):
         cleaned_data = super(PostItemForm, self).clean()

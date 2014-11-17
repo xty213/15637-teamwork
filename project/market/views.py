@@ -6,9 +6,10 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 
-
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
+
+from mimetypes import guess_type
 
 from forms import *
 from models import *
@@ -153,6 +154,17 @@ def buyer_view(request, id='0'):
         item['seller'] = {'name':item_obj.transaction.seller.username}
         item['description'] = item_obj.description
 
+        pics = []
+        if item_obj.pic1:
+            pics.append("/media/item/%d/1" % item_obj.id)
+        if item_obj.pic2:
+            pics.append("/media/item/%d/2" % item_obj.id)
+        if item_obj.pic3:
+            pics.append("/media/item/%d/3" % item_obj.id)
+        if item_obj.pic4:
+            pics.append("/media/item/%d/4" % item_obj.id)
+        item['pics'] = pics
+
         items.append(item)
 
     items.sort(key=lambda x:x['start_time'], reverse=True)
@@ -199,41 +211,73 @@ def item_detail(request, id):
                                     'price':"%.2f" % (float(x.bid_price) / 100),
                                     'time':x.bid_time}, bid_logs)
 
+    pics = []
+    if item_obj.pic1:
+        pics.append("/media/item/%d/1" % item_obj.id)
+    if item_obj.pic2:
+        pics.append("/media/item/%d/2" % item_obj.id)
+    if item_obj.pic3:
+        pics.append("/media/item/%d/3" % item_obj.id)
+    if item_obj.pic4:
+        pics.append("/media/item/%d/4" % item_obj.id)
+    item['pics'] = pics
+
     return render(request, 'item_detail.html', context)
 
 
 @login_required
 def post_item(request):
-    form = PostItemForm(request.POST)
+    form = PostItemForm(request.POST, request.FILES)
 
     if not form.is_valid():
         return redirect(reverse('seller_view'))
 
+    transaction = None
     if form.cleaned_data.get('mode') == 'fixed':
         transaction = Transaction(deal_price=(int(form.cleaned_data.get('price') * 100)),
                                   seller=request.user)
-        transaction.save()
-
-        item = Item(name=form.cleaned_data.get('name'),
-                    description=form.cleaned_data.get('description'),
-                    transaction=transaction,
-                    category=form.cleaned_data.get('category'))
-        item.save()
-
     else:
         transaction = Transaction(deal_price=(int(form.cleaned_data.get('price') * 100)),
                                   seller=request.user,
                                   end_time=form.cleaned_data.get('endtime'),
                                   is_auction=True)
-        transaction.save()
+    transaction.save()
 
-        item = Item(name=form.cleaned_data.get('name'),
-                    description=form.cleaned_data.get('description'),
-                    transaction=transaction,
-                    category=form.cleaned_data.get('category'))
-        item.save()
+    item = Item(name=form.cleaned_data.get('name'),
+                description=form.cleaned_data.get('description'),
+                transaction=transaction,
+                category=form.cleaned_data.get('category'))
+    if form.cleaned_data.get('pic1'):
+        item.pic1 = form.cleaned_data.get('pic1')
+    if form.cleaned_data.get('pic2'):
+        item.pic2 = form.cleaned_data.get('pic2')
+    if form.cleaned_data.get('pic3'):
+        item.pic3 = form.cleaned_data.get('pic3')
+    if form.cleaned_data.get('pic4'):
+        item.pic4 = form.cleaned_data.get('pic4')
+    item.save()
 
     return redirect(reverse('item_detail', args=[item.id]))
+
+@login_required
+def get_item_pic(request, itemid, index):
+    item = get_object_or_404(Item, id=itemid)
+
+    pic = None
+    if index == '1':
+        pic = item.pic1
+    elif index == '2':
+        pic = item.pic2
+    elif index == '3':
+        pic = item.pic3
+    elif index == '4':
+        pic = item.pic4
+
+    if not pic:
+        raise Http404
+
+    content_type = guess_type(pic.name)
+    return HttpResponse(pic, content_type=content_type)
 
 @login_required
 def buy_fixed_price_item(request):
