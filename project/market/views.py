@@ -139,6 +139,8 @@ def buyer_view(request, id='0'):
     else:
         item_objs = Item.objects.filter(category__exact=id)
 
+    item_objs = filter(lambda o:not o.transaction.is_closed, item_objs)
+
     for item_obj in item_objs:
         item = {}
         item['id'] = item_obj.id
