@@ -182,9 +182,9 @@ def item_detail(request, id):
     item['start_time'] = item_obj.transaction.start_time
     item['end_time'] = item_obj.transaction.end_time
     item['description'] = item_obj.description
-    item['disable_btn'] = item_obj.transaction.seller == request.user
+    item['sold_by_curr_user'] = item_obj.transaction.seller == request.user
 
-    qas = map(lambda x:{'q':x.query, 'a':x.answer}, item_obj.questions.all())
+    qas = map(lambda x:{'q':x.query, 'a':x.answer, 'id':x.id}, item_obj.questions.all())
     item['qas'] = qas
 
     return render(request, 'item_detail.html', context)
@@ -322,7 +322,7 @@ def answer_question(request):
         return HttpResponse('invalid questionid')
 
     if not question.item.transaction.seller.username == request.user.username:
-        return HttpResponse('nobody other than the seller can answer the question')
+        return HttpResponse('only the seller can answer the question')
 
     question.answer = request.POST['answer']
     question.save()

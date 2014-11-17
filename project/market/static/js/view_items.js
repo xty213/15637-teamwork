@@ -77,4 +77,38 @@ $(document).ready(function() {
         );
         return false;
     });
+
+    $("form.form-answer").submit(function(e){
+        $(e.target).addClass("answering");
+        swal({
+            title: "Answer a question",
+            text: "Please write down your answer here:",
+            type: "info",
+            showCancelButton: true,
+            confirmButtonText: 'Ok',
+            inputField: true,
+            },
+            function(ans){
+                $("form.answering input[name='answer']").val(ans);
+                $.post($("form.answering").attr('action'), {
+                        'questionid':$("form.answering input[name='questionid']").val(),
+                        'answer':ans,
+                        "csrfmiddlewaretoken":$("form.answering input[name='csrfmiddlewaretoken']").val()
+                    },
+                    function(data){
+                        if(data != "success"){
+                            swal("Opps! An error?", "Something wrong with your request.\nThe error message is \"" + data + "\"\nPlease try again later.", "error");
+                        }
+                        else {
+                            swal("Thanks for your answer!", "Your answer is saved.", "success");
+                            $("form.answering").after("<span class='item-qa-sign'>A:</span> <span>" + $("form.answering input[name='answer']").val() + "</span>");
+                            $("form.answering").remove();
+                        }
+                        $("form.answering").removeClass("answering");
+                    }
+                );
+            }
+        );
+        return false;
+    });
 });
