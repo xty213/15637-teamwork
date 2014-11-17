@@ -170,6 +170,11 @@ def item_detail(request, id):
     seller_obj = item_obj.transaction.seller
 
     seller = {'name':seller_obj.username}
+    rates = [x for x in map(lambda x:x.buyer_rate, Transaction.objects.filter(seller__exact=seller_obj)) if x]
+    if len(rates) > 0:
+        rate = int(round(sum(rates) / float(len(rates)), 0))
+        seller['stars'] = xrange(rate)
+        seller['empty_stars'] = xrange(5 - rate)
     item['seller'] = seller
 
     item['id'] = item_obj.id
@@ -315,6 +320,19 @@ def seller_view(request):
 @login_required
 def my_account(request):
     context = {'mode':'my_account'}
+    transcations_bought = []
+    context['transcations_bought'] = transcations_bought
+    transcations_sold = []
+    context['transcations_sold'] = transcations_sold
+
+    for trans in Transaction.objects.filter(buyer__exact=request.user):
+        trans.deal_price /= 100.0
+        transcations_bought.append(trans)
+
+    for trans in Transaction.objects.filter(seller__exact=request.user):
+        trans.deal_price /= 100.0
+        transcations_sold.append(trans)
+
     return render(request, 'my_account.html', context)
 
 @login_required
@@ -412,4 +430,51 @@ def search(request):
     # TODO
     if request.GET['mode'] == 'demands':
         raise Http404
+
+@login_required
+def rate(request):
+    if not 'itemid' in request.POST or not request.POST['itemid']:
+        return HttpResponse('missing itemid')
+
+    if not 'mode' in request.POST or not request.POST['mode']:
+        return HttpResponse('missing mode')
+
+    if not request.POST['mode'] == 'rate_on_buyer' and not request.POST['mode'] == 'rate_on_seller':
+        return HttpResponse('invalid mode')
+
+    if not 'rate' in request.POST or not request.POST['rate']:
+        return HttpResponse('missing rate')
+
+    if not 1 <= int(request.POST['rate']) <= 5:
+        return HttpResponse('invalid rate')
+
+    item = None
+    try:
+        item = Item.objects.get(id__exact=request.POST['itemid'])
+    except Item.DoesNotExist:
+        return HttpResponse('invalid itemid')
+
+    if request.POST['mode'] == 'rate_on_buyer':
+        if not item.transaction.is_closed:
+            return HttpResponse('transaction is still open')
+        if not item.transcation.seller.username == request.user.username:
+            return HttpResponse('you are not the seller')
+        if item.transaction.seller_rate:
+            return HttpResponse('this transaction has been rated')
+
+        item.transcation.seller_rate = int(request.POST['rate'])
+        item.transcation.save()
+
+    else:
+        if not item.transaction.is_closed:
+            return HttpResponse('transaction is still open')
+        if not item.transaction.buyer.username == request.user.username:
+            return HttpResponse('you are not the buyer')
+        if item.transaction.buyer_rate:
+            return HttpResponse('this transaction has been rated')
+
+        item.transaction.buyer_rate = int(request.POST['rate'])
+        item.transaction.save()
+
+    return HttpResponse('success')
 

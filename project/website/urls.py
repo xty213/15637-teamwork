@@ -25,4 +25,5 @@ urlpatterns = patterns('',
     url(r'^answer_question/$', views.answer_question, name='answer_question'),
     url(r'^search/$', views.search, name='search'),
     url(r'^place_bid/$', views.place_bid, name='place_bid'),
+    url(r'^rate/$', views.rate, name='rate'),
 )

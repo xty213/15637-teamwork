@@ -23,7 +23,7 @@ class Transaction(models.Model):
     buyer_rate = models.IntegerField(null=True, blank=True)
 
     def __unicode__(self):
-        return self.id
+        return str(self.id)
 
 
 class Item(models.Model):
