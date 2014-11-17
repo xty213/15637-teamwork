@@ -1,8 +1,22 @@
                                         <div class="panel panel-default">
                                             <div class="panel-heading">
                                                 <p class="item-category panel-title pull-left">{{item.category}}</p>
-                                                <button type="button" class="btn btn-danger pull-right">Buy This!</button>
-                                                <button type="button" class="btn btn-default pull-right">Ask Question</button>
+                                                {% if item.is_closed %}
+                                                    <p class="pull-right text-danger">Sold at {{item.deal_time|date:"m/d/Y H:i"}}</p>
+                                                {% else %}
+                                                    <div id="heading-btn-group">
+                                                        {% if item.is_auction %}
+                                                        <button type="button" class="btn btn-danger pull-right btn-place-bid">Place Bid!</button>
+                                                        {% else %}
+                                                        <form id="form-fixed-price" method="post" action="{% url 'buy_fixed_price_item' %}">
+                                                            <input type="hidden" name="itemid" value="{{item.id}}">
+                                                            {% csrf_token %}
+                                                            <button type="submit" class="btn btn-danger pull-right">Buy This!</button>
+                                                        </form>
+                                                        {% endif %}
+                                                        <button type="button" class="btn btn-default pull-right">Ask Question</button>
+                                                    </div>
+                                                {% endif %} 
                                                 <div class="clearfix"></div>
                                             </div>
                                             <div class="panel-body">

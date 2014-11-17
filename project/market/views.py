@@ -170,6 +170,8 @@ def item_detail(request, id):
     item['id'] = item_obj.id
     item['category'] = category_converter(item_obj.category)
     item['name'] = item_obj.name
+    item['is_closed'] = item_obj.transaction.is_closed
+    item['deal_time'] = item_obj.transaction.deal_time if item_obj.transaction.is_closed else None
     item['is_auction'] = item_obj.transaction.is_auction
     item['price'] = '%.2f' % (item_obj.transaction.deal_price / 100.0)
     item['start_time'] = item_obj.transaction.start_time
@@ -198,6 +200,45 @@ def post_item(request):
         item.save()
 
     return redirect(reverse('item_detail', args=[item.id]))
+
+@login_required
+def buy_fixed_price_item(request):
+    if not 'itemid' in request.POST or not request.POST["itemid"]:
+        return HttpResponse('missing itemid')
+
+    if not 'itemid' in request.POST:
+        return HttpResponse('missing message')
+
+    item = None
+    try:
+        item = Item.objects.get(id__exact=request.POST["itemid"])
+    except Item.DoesNotExist:
+        return HttpResponse('invalid itemid')
+
+    if item.transaction.seller.username == request.user.username:
+        return HttpResponse('the seller cannot be the buyer')
+
+    trans = item.transaction
+    trans.deal_time = datetime.now()
+    trans.is_closed = True
+    trans.buyer = request.user
+    trans.save()
+
+    email_body = """The following item is bought by %s:
+Item name: %s
+Item description: %s
+Item price: $%.2f
+
+The buyer left the following message:
+%s
+""" % (request.user.username, item.name, item.description, float(trans.deal_price)/100, request.POST["msg"])
+
+    send_mail(subject='An item has been sold!',
+              message=email_body,
+              from_email='noreply.OFM.CMU@gmail.com',
+              recipient_list=[item.transaction.seller.email])
+
+    return HttpResponse('success')
 
 @login_required
 def seller_view(request):
