@@ -1,0 +1,5 @@
+# install SSL server
+sudo pip install django-sslserver
+
+# run SSL server
+python manage.py runsslserver --certificate perm/cert.pem --key perm/key.pem
