@@ -16,6 +16,10 @@ from models import *
 from tools import *
 from datetime import datetime
 
+import httplib
+import json
+import sys
+
 
 def register(request):
     context = {}
@@ -222,6 +226,14 @@ def item_detail(request, id):
         pics.append("/media/item/%d/4" % item_obj.id)
     item['pics'] = pics
 
+    if 'pay_status' in request.GET:
+        if request.GET['pay_status'] == 'success':
+            context['pay_msg'] = "Your payment is approved."
+        elif request.GET['pay_status'] == 'error':
+            context['pay_msg'] = "An error occured when redirecting to PayPal. Please try again."
+        elif request.GET['pay_status'] == 'cancel':
+            context['pay_msg'] = "Your payment is canceled."
+
     return render(request, 'item_detail.html', context)
 
 
@@ -317,6 +329,49 @@ The buyer left the following message:
               recipient_list=[item.transaction.seller.email])
 
     return HttpResponse('success')
+
+@login_required
+def pay_by_paypal(request):
+    if not 'itemid' in request.POST or not request.POST["itemid"]:
+        return HttpResponse('missing itemid')
+
+    item = None
+    try:
+        item = Item.objects.get(id__exact=request.POST["itemid"])
+    except Item.DoesNotExist:
+        return HttpResponse('invalid itemid')
+
+    if item.transaction.seller.username == request.user.username:
+        return HttpResponse('the seller cannot be the buyer')
+
+    # init a transaction
+    conn = httplib.HTTPSConnection('svcs.sandbox.paypal.com')
+    conn.request('POST',
+                 '/AdaptivePayments/Pay',
+                 json.dumps({"actionType":"PAY",
+                            "currencyCode":"USD",
+                            "receiverList":{"receiver":[{
+                                "amount":"%.2f" % (float(item.transaction.deal_price) / 100),
+                                "email":"%s@andrew.cmu.edu" % item.transaction.seller.username}]},
+                            "returnUrl":"https://%s/item_detail/%d?pay_status=success" % (request.get_host(), item.id),
+                            "cancelUrl":"https://%s/item_detail/%d?pay_status=cancel" % (request.get_host(), item.id),
+                            "requestEnvelope":{
+                                "errorLanguage":"en_US",
+                                "detailLevel":"ReturnAll"}
+                           }),
+                 {'X-PAYPAL-SECURITY-USERID': 'tianyux-facilitator_api1.andrew.cmu.edu',
+                  'X-PAYPAL-SECURITY-PASSWORD': 'K4T4WH8S5RSAMN7V',
+                  'X-PAYPAL-SECURITY-SIGNATURE': 'An2ziE2QZvylPCnOQ4l2ELVRsqTrARZS7CP-P68Ic4xlCwS0Yc4z3bhD',
+                  'X-PAYPAL-APPLICATION-ID': 'APP-80W284485P519543T',
+                  'X-PAYPAL-REQUEST-DATA-FORMAT': 'JSON',
+                  'X-PAYPAL-RESPONSE-DATA-FORMAT': 'JSON'})
+
+    # if the transaction is initiated, redirect to paypal
+    resp = json.loads(conn.getresponse().read())
+    if resp['responseEnvelope']['ack'] == 'Success':
+        return redirect('https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_ap-payment&paykey=%s' % resp['payKey'])
+    else:
+        return redirect("%s/item_detail/%d?pay_status=error" % (request.get_host(), item.id))
 
 @login_required
 def place_bid(request):

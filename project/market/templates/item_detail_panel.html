@@ -11,13 +11,18 @@
                                                             <input type="hidden" name="bid_price" value="">
                                                             <input type="hidden" name="curr_user" value="{{item.curr_username}}">
                                                             {% csrf_token %}
-                                                            <button type="submit" class="btn btn-danger pull-right" {% if item.sold_by_curr_user %}disabled="disabled"{% endif %}>Place Bid!</button>
+                                                            <button type="submit" class="btn btn-danger pull-right" {% if item.sold_by_curr_user %}disabled="disabled"{% endif %}>Place Bid</button>
                                                         </form>
                                                         {% else %}
+                                                        <form method="post" action="{% url 'pay_by_paypal' %}">
+                                                            <input type="hidden" name="itemid" value="{{item.id}}">
+                                                            {% csrf_token %}
+                                                            <button type="submit" class="btn btn-danger pull-right" {% if item.sold_by_curr_user %}disabled="disabled"{% endif %}>Pay by PayPal</button>
+                                                        </form>
                                                         <form id="form-fixed-price" method="post" action="{% url 'buy_fixed_price_item' %}">
                                                             <input type="hidden" name="itemid" value="{{item.id}}">
                                                             {% csrf_token %}
-                                                            <button type="submit" class="btn btn-danger pull-right" {% if item.sold_by_curr_user %}disabled="disabled"{% endif %}>Buy This!</button>
+                                                            <button type="submit" class="btn btn-danger pull-right" {% if item.sold_by_curr_user %}disabled="disabled"{% endif %}>Order This</button>
                                                         </form>
                                                         {% endif %}
                                                         <form id="form-ask-question" method="post" action="{% url 'ask_question' %}">
