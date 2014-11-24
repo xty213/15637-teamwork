@@ -383,7 +383,6 @@ def finish_paypal_payment(request, id):
     if item.transaction.buyer.username != request.user.username:
         return HttpResponse('you are not the buyer')
 
-    print(item.transaction.paykey)
     resp = get_paypal_payment_detail(item.transaction.paykey)
     if resp['status'] == "COMPLETED":
         trans = item.transaction
