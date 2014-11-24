@@ -17,12 +17,12 @@
                                                         <form method="post" action="{% url 'pay_by_paypal' %}">
                                                             <input type="hidden" name="itemid" value="{{item.id}}">
                                                             {% csrf_token %}
-                                                            <button type="submit" class="btn btn-danger pull-right" {% if item.sold_by_curr_user %}disabled="disabled"{% endif %}>Pay by PayPal</button>
+                                                            <button type="submit" class="btn btn-danger pull-right" {% if item.sold_by_curr_user or paypal_pending or paypal_complete %}disabled="disabled"{% endif %}>Pay by PayPal</button>
                                                         </form>
                                                         <form id="form-fixed-price" method="post" action="{% url 'buy_fixed_price_item' %}">
                                                             <input type="hidden" name="itemid" value="{{item.id}}">
                                                             {% csrf_token %}
-                                                            <button type="submit" class="btn btn-danger pull-right" {% if item.sold_by_curr_user %}disabled="disabled"{% endif %}>Order This</button>
+                                                            <button type="submit" class="btn btn-danger pull-right" {% if item.sold_by_curr_user or paypal_pending or paypal_complete %}disabled="disabled"{% endif %}>Order This</button>
                                                         </form>
                                                         {% endif %}
                                                         <form id="form-ask-question" method="post" action="{% url 'ask_question' %}">

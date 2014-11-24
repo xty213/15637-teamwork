@@ -26,6 +26,16 @@
                 {{pay_msg}}
             </div>
             {% endif %}
+            {% if paypal_complete %}
+            <div class="alert alert-danger">
+                This item is sold.
+            </div>
+            {% endif %}
+            {% if paypal_pending %}
+            <div class="alert alert-danger">
+                This item is currently blocked because another user has a pending payment.
+            </div>
+            {% endif %}
             <ul id="item-list">
                 <li>
                     {% include 'item_detail_panel.html' %}

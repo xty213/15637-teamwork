@@ -9,13 +9,16 @@ from django.contrib.auth import login, authenticate
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 
+from django.db import transaction
+
+from django.utils import timezone
+
 from mimetypes import guess_type
 
 from forms import *
 from models import *
 from tools import *
 from datetime import datetime
-from django.utils import timezone
 
 import httplib
 import json
@@ -227,6 +230,19 @@ def item_detail(request, id):
         pics.append("/media/item/%d/4" % item_obj.id)
     item['pics'] = pics
 
+    if item_obj.transaction.paykey:
+        resp = get_paypal_payment_detail(item_obj.transaction.paykey)
+        if resp['status'] == "EXPIRED" or resp['status'] == "ERROR":
+            trans = item_obj.transaction
+            trans.buyer = None
+            trans.paykey = None
+            trans.save()
+        elif resp['status'] == "COMPLETED":
+            if item_obj.transaction.buyer != request.user:
+                context['paypal_complete'] = True
+        elif not item_obj.transaction.buyer == request.user:
+            context['paypal_pending'] = True
+
     if 'pay_status' in request.GET:
         if request.GET['pay_status'] == 'success':
             context['pay_msg'] = "Your payment is approved."
@@ -234,6 +250,11 @@ def item_detail(request, id):
             context['pay_msg'] = "An error occured when redirecting to PayPal. Please try again."
         elif request.GET['pay_status'] == 'cancel':
             context['pay_msg'] = "Your payment is canceled."
+            trans = item_obj.transaction
+            if trans.buyer == request.user:
+                trans.buyer = None
+                trans.paykey = None
+                trans.save()
         elif request.GET['pay_status'] == 'pending':
             context['pay_msg'] = "Another payment is still pending."
 
@@ -294,6 +315,7 @@ def get_item_pic(request, itemid, index):
     content_type = guess_type(pic.name)
     return HttpResponse(pic, content_type=content_type)
 
+@transaction.atomic
 @login_required
 def buy_fixed_price_item(request):
     if not 'itemid' in request.POST or not request.POST["itemid"]:
@@ -333,6 +355,7 @@ The buyer left the following message:
 
     return HttpResponse('success')
 
+@transaction.atomic
 @login_required
 def pay_by_paypal(request):
     host_name = request.get_host()
@@ -354,8 +377,17 @@ def pay_by_paypal(request):
 
     if item.transaction.paykey:
         resp = get_paypal_payment_detail(item.transaction.paykey)
-        if resp['status'] != "EXPIRED" or resp['status'] != "ERROR":
-            return redirect("https://%s/item_detail/%d?pay_status=pending" % (host_name, item.id))
+        print resp['status']
+        if resp['status'] == "EXPIRED" or resp['status'] == "ERROR":
+            trans = item.transaction
+            trans.buyer = None
+            trans.paykey = None
+            trans.save()
+        elif resp['status'] == "COMPLETED":
+            if item.transaction.buyer == request.user:
+                return finish_paypal_payment(request, item.id)
+        else:
+                redirect("https://%s/item_detail/%d?pay_status=pending" % (host_name, item.id))
 
     # init a transaction, and redirect to paypal
     resp = init_paypal_payment(host_name, item)
@@ -369,6 +401,7 @@ def pay_by_paypal(request):
     else:
         return redirect("https://%s/item_detail/%d?pay_status=error" % (host_name, item.id))
 
+@transaction.atomic
 @login_required
 def finish_paypal_payment(request, id):
     item = None
