@@ -18,7 +18,6 @@ from mimetypes import guess_type
 from forms import *
 from models import *
 from tools import *
-from datetime import datetime
 
 import httplib
 import json
@@ -336,7 +335,7 @@ def buy_fixed_price_item(request):
         return HttpResponse('the seller cannot be the buyer')
 
     trans = item.transaction
-    trans.deal_time = datetime.now()
+    trans.deal_time = timezone.now()
     trans.is_closed = True
     trans.buyer = request.user
     trans.save()
