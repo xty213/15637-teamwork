@@ -1,8 +1,10 @@
-Detailed Project Specification
-==============================
+15637 Project - Online Flea Market
+==================================
 
 ### Deliverables
-
-  * Specification document: specification.pdf
-  * Data models: project/market/models.py
+  * Django project: project/
+  * Proposal: proposal/FleaMarketproposal.pdf
+  * Specification: specification.pdf
   * Wireframes: wireframes/
+  * Sprint1 recap: SecondSprintBacklog.pdf
+  * Sprint2 recap: ThirdSprintBacklog.pdf
