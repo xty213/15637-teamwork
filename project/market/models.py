@@ -21,6 +21,7 @@ class Transaction(models.Model):
     buyer = models.ForeignKey(User, related_name="trans_as_buyer", null=True, blank=True)
     seller_rate = models.IntegerField(null=True, blank=True)
     buyer_rate = models.IntegerField(null=True, blank=True)
+    paykey = models.CharField(max_length=128, null=True, blank=True)
 
     def __unicode__(self):
         return str(self.id)
