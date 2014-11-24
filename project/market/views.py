@@ -238,7 +238,9 @@ def item_detail(request, id):
             trans.paykey = None
             trans.save()
         elif resp['status'] == "COMPLETED":
-            if item_obj.transaction.buyer != request.user:
+            if item_obj.transaction.buyer == request.user:
+                return finish_paypal_payment(request, item_obj.id)
+            else:
                 context['paypal_complete'] = True
         elif not item_obj.transaction.buyer == request.user:
             context['paypal_pending'] = True
@@ -421,6 +423,7 @@ def finish_paypal_payment(request, id):
         trans = item.transaction
         trans.deal_time = timezone.now()
         trans.is_closed = True
+        trans.paykey = None
         trans.save()
         return redirect("https://%s/item_detail/%d?pay_status=success" % (request.get_host(), item.id))
     return redirect("https://%s/item_detail/%d" % (request.get_host(), item.id))
