@@ -15,6 +15,7 @@ from forms import *
 from models import *
 from tools import *
 from datetime import datetime
+from django.utils import timezone
 
 import httplib
 import json
@@ -233,6 +234,8 @@ def item_detail(request, id):
             context['pay_msg'] = "An error occured when redirecting to PayPal. Please try again."
         elif request.GET['pay_status'] == 'cancel':
             context['pay_msg'] = "Your payment is canceled."
+        elif request.GET['pay_status'] == 'pending':
+            context['pay_msg'] = "Another payment is still pending."
 
     return render(request, 'item_detail.html', context)
 
@@ -332,6 +335,8 @@ The buyer left the following message:
 
 @login_required
 def pay_by_paypal(request):
+    host_name = request.get_host()
+
     if not 'itemid' in request.POST or not request.POST["itemid"]:
         return HttpResponse('missing itemid')
 
@@ -344,17 +349,62 @@ def pay_by_paypal(request):
     if item.transaction.seller.username == request.user.username:
         return HttpResponse('the seller cannot be the buyer')
 
-    # init a transaction
+    if item.transaction.is_closed:
+        return HttpResponse('the transaction is already closed')
+
+    if item.transaction.paykey:
+        resp = get_paypal_payment_detail(item.transaction.paykey)
+        if resp['status'] != "EXPIRED" or resp['status'] != "ERROR":
+            return redirect("https://%s/item_detail/%d?pay_status=pending" % (host_name, item.id))
+
+    # init a transaction, and redirect to paypal
+    resp = init_paypal_payment(host_name, item)
+    if resp['responseEnvelope']['ack'] == 'Success':
+        # update the paykey and buyer
+        trans = item.transaction
+        trans.paykey = resp['payKey']
+        trans.buyer = request.user
+        trans.save()
+        return redirect('https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_ap-payment&paykey=%s' % resp['payKey'])
+    else:
+        return redirect("https://%s/item_detail/%d?pay_status=error" % (host_name, item.id))
+
+@login_required
+def finish_paypal_payment(request, id):
+    item = None
+    try:
+        item = Item.objects.get(id__exact=id)
+    except Item.DoesNotExist:
+        return HttpResponse('invalid itemid')
+
+    if not item.transaction.paykey:
+        return HttpResponse('the payment is not initiated')
+
+    if item.transaction.buyer.username != request.user.username:
+        return HttpResponse('you are not the buyer')
+
+    print(item.transaction.paykey)
+    resp = get_paypal_payment_detail(item.transaction.paykey)
+    if resp['status'] == "COMPLETED":
+        trans = item.transaction
+        trans.deal_time = timezone.now()
+        trans.is_closed = True
+        trans.save()
+        return redirect("https://%s/item_detail/%d?pay_status=success" % (request.get_host(), item.id))
+    return redirect("https://%s/item_detail/%d" % (request.get_host(), item.id))
+
+def init_paypal_payment(host_name, item):
     conn = httplib.HTTPSConnection('svcs.sandbox.paypal.com')
     conn.request('POST',
                  '/AdaptivePayments/Pay',
                  json.dumps({"actionType":"PAY",
                             "currencyCode":"USD",
+                            "payKeyDuration":"PT10M",
                             "receiverList":{"receiver":[{
                                 "amount":"%.2f" % (float(item.transaction.deal_price) / 100),
                                 "email":"%s@andrew.cmu.edu" % item.transaction.seller.username}]},
-                            "returnUrl":"https://%s/item_detail/%d?pay_status=success" % (request.get_host(), item.id),
-                            "cancelUrl":"https://%s/item_detail/%d?pay_status=cancel" % (request.get_host(), item.id),
+                            "returnUrl":"https://%s/finish_paypal_payment/%d" % (host_name, item.id),
+                            "cancelUrl":"https://%s/item_detail/%d?pay_status=cancel" % (host_name, item.id),
                             "requestEnvelope":{
                                 "errorLanguage":"en_US",
                                 "detailLevel":"ReturnAll"}
@@ -367,11 +417,26 @@ def pay_by_paypal(request):
                   'X-PAYPAL-RESPONSE-DATA-FORMAT': 'JSON'})
 
     # if the transaction is initiated, redirect to paypal
+    return json.loads(conn.getresponse().read())
+
+def get_paypal_payment_detail(paykey):
+    conn = httplib.HTTPSConnection('svcs.sandbox.paypal.com')
+    conn.request('POST',
+             '/AdaptivePayments/PaymentDetails',
+             json.dumps({"payKey":paykey,
+                        "requestEnvelope":{
+                            "errorLanguage":"en_US",
+                            "detailLevel":"ReturnAll"}
+                       }),
+             {'X-PAYPAL-SECURITY-USERID': 'tianyux-facilitator_api1.andrew.cmu.edu',
+              'X-PAYPAL-SECURITY-PASSWORD': 'K4T4WH8S5RSAMN7V',
+              'X-PAYPAL-SECURITY-SIGNATURE': 'An2ziE2QZvylPCnOQ4l2ELVRsqTrARZS7CP-P68Ic4xlCwS0Yc4z3bhD',
+              'X-PAYPAL-APPLICATION-ID': 'APP-80W284485P519543T',
+              'X-PAYPAL-REQUEST-DATA-FORMAT': 'JSON',
+              'X-PAYPAL-RESPONSE-DATA-FORMAT': 'JSON'})
+
     resp = json.loads(conn.getresponse().read())
-    if resp['responseEnvelope']['ack'] == 'Success':
-        return redirect('https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_ap-payment&paykey=%s' % resp['payKey'])
-    else:
-        return redirect("%s/item_detail/%d?pay_status=error" % (request.get_host(), item.id))
+    return resp
 
 @login_required
 def place_bid(request):
