@@ -517,7 +517,7 @@ def seller_view(request):
 
 @login_required
 def my_account(request):
-    context = {'mode':'my_account'}
+    context = {'mode':'my_account', 'user':request.user}
     transcations_bought = []
     context['transcations_bought'] = transcations_bought
     transcations_sold = []

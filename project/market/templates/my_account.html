@@ -16,7 +16,16 @@
         <div id="right-col" class="pull-right container">
             <div class="row">
                 <div class="span12">
-                    <div id="account-info-tab" class="my-account-tab" style="display:none;"></div>
+                    <div id="account-info-tab" class="my-account-tab">
+                        <h3>Account Info</h3>
+                        <dl>
+                            <dt>Username</dt><dd>{{user.username}}</dd>
+                            <dt>Email</dt><dd>{{user.email}}</dd>
+                            <dt>Registration Time</dt><dd>{{user.date_joined|date:"m/d/Y H:i"}}</dd>
+                            <dt>Last Login Time</dt><dd>{{user.last_login|date:"m/d/Y H:i"}}</dd>
+                        </dl>
+
+                    </div>
 
                     <div id="trans-hist-tab" class="my-account-tab">
                         <h3>Transaction History</h3>
