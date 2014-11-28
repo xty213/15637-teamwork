@@ -66,3 +66,4 @@ class PostItemForm(forms.Form):
             raise forms.ValidationError('Auction mode must be associated with end time.')
 
         return cleaned_data
+

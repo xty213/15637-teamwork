@@ -29,4 +29,6 @@ urlpatterns = patterns('',
     url(r'^place_bid/$', views.place_bid, name='place_bid'),
     url(r'^rate/$', views.rate, name='rate'),
     url(r'^media/item/(?P<itemid>\d+)/(?P<index>\d+)$', views.get_item_pic, name="get_item_pic"),
+    url(r'^show_message/(?P<id>\d+)$', views.show_message, name='show_message'),
+    url(r'^send_message/(?P<username>[a-zA-Z0-9_@\+\-]+)$', views.send_message, name='send_message'),
 )

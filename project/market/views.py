@@ -522,6 +522,10 @@ def my_account(request):
     context['transcations_bought'] = transcations_bought
     transcations_sold = []
     context['transcations_sold'] = transcations_sold
+    inbox = []
+    context['inbox'] = inbox
+    outbox = []
+    context['outbox'] = outbox
 
     for trans in Transaction.objects.filter(buyer__exact=request.user):
         trans.deal_price /= 100.0
@@ -530,6 +534,12 @@ def my_account(request):
     for trans in Transaction.objects.filter(seller__exact=request.user):
         trans.deal_price /= 100.0
         transcations_sold.append(trans)
+
+    for message in ShortMessage.objects.filter(receiver__exact=request.user).filter(deleted_by_receiver__exact=False).order_by('-time'):
+        inbox.append(message)
+
+    for message in ShortMessage.objects.filter(sender__exact=request.user).filter(deleted_by_sender__exact=False).order_by('-time'):
+        outbox.append(message)
 
     return render(request, 'my_account.html', context)
 
@@ -695,6 +705,42 @@ def rate(request):
 
         item.transaction.buyer_rate = int(request.POST['rate'])
         item.transaction.save()
+
+    return HttpResponse('success')
+
+@login_required
+def show_message(request, id):
+    message = get_object_or_404(ShortMessage, id=id)
+
+    context = {}
+    if message.sender == request.user:
+        context['title'] = message.title
+        context['receiver'] = message.receiver
+        context['content'] = message.content
+        return render(request, 'show_message.html', context)
+    elif message.receiver == request.user:
+        context['title'] = message.title
+        context['sender'] = message.sender
+        context['content'] = message.content
+        return render(request, 'show_message.html', context)
+    else:
+        raise Http404
+
+@login_required
+def send_message(request, username):
+    user = get_object_or_404(User, username=username)
+
+    if not 'title' in request.POST or not request.POST['title']:
+        raise Http404
+    if not 'content' in request.POST:
+        raise Http404
+
+    message = ShortMessage()
+    message.sender = request.user
+    message.receiver = user
+    message.title = request.POST['title']
+    message.content = request.POST['content']
+    message.save()
 
     return HttpResponse('success')
 

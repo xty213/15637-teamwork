@@ -24,7 +24,6 @@
                             <dt>Registration Time</dt><dd>{{user.date_joined|date:"m/d/Y H:i"}}</dd>
                             <dt>Last Login Time</dt><dd>{{user.last_login|date:"m/d/Y H:i"}}</dd>
                         </dl>
-
                     </div>
 
                     <div id="trans-hist-tab" class="my-account-tab">
@@ -47,7 +46,7 @@
 
                     <div id="setting-tab" class="my-account-tab" style="display:none;"></div>
 
-                    <div id="message-tab" class="tabbable my-account-tab" style="display:none;">
+                    <div id="message-tab" class="tabbable my-account-tab">
                         <ul class="nav nav-tabs">
                             <li class="active">
                                 <a href="#inbox-panel" data-toggle="tab">Inbox</a>
@@ -58,14 +57,20 @@
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane active" id="inbox-panel">
-                                <p>
-                                    Under Construction
-                                </p>
+                                <table class="table table-hover">
+                                    <tr><th>Title</th><th>Sender</th><th>Time</th></tr>
+                                    {% for message in inbox %}
+                                    <tr><td><a href="{% url 'show_message' message.id %}">{{message.title}}</a></td><td>{{message.sender}}</td><td>{{message.time|date:"m/d/Y H:i"}}</td></tr>
+                                    {% endfor %}
+                                </table>
                             </div>
                             <div class="tab-pane" id="outbox-panel">
-                                <p>
-                                    Under Construction
-                                </p>
+                                <table class="table table-hover">
+                                    <tr><th>Title</th><th>Receiver</th><th>Time</th></tr>
+                                    {% for message in outbox %}
+                                    <tr><td><a href="{% url 'show_message' message.id %}">{{message.title}}</a></td><td>{{message.receiver}}</td><td>{{message.time|date:"m/d/Y H:i"}}</td></tr>
+                                    {% endfor %}
+                                </table>
                             </div>
                         </div>
                     </div>
