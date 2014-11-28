@@ -728,12 +728,16 @@ def show_message(request, id):
 
 @login_required
 def send_message(request, username):
-    user = get_object_or_404(User, username=username)
+    user = None
+    try:
+        user = User.objects.get(username__exact=request.POST['username'])
+    except Item.DoesNotExist:
+        return HttpResponse('invalid username')
 
     if not 'title' in request.POST or not request.POST['title']:
-        raise Http404
+        return HttpResponse('title is missing')
     if not 'content' in request.POST:
-        raise Http404
+        raise HttpResponse('content is missing')
 
     message = ShortMessage()
     message.sender = request.user
@@ -743,4 +747,19 @@ def send_message(request, username):
     message.save()
 
     return HttpResponse('success')
+
+@login_required
+def delete_message(request, id):
+    message = get_object_or_404(ShortMessage, id=id)
+
+    if message.sender == request.user:
+        message.deleted_by_sender = True
+        message.save()
+        return HttpResponse('success')
+    elif message.receiver == request.user:
+        message.deleted_by_receiver = True
+        message.save()
+        return HttpResponse('success')
+    else:
+        raise Http404
 
