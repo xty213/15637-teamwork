@@ -15,8 +15,8 @@
     <p>{{content}}</p>
     {% if sender %}
     <form method="post" action="{% url 'send_message' sender %}">
-        <input type="hidden" name="title" value="RE:{{title|truncatechars:35}}">
-        <textarea name="content" cols="100" rows="5"></textarea>
+        Title:<input type="text" name="title" value="RE:{{title|truncatechars:35}}"> <br>
+        Content:<textarea name="content" cols="100" rows="5"></textarea> <br>
         <input type="submit" value="Reply">
         {% csrf_token %}
     </form>
