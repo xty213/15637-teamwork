@@ -521,6 +521,7 @@ def seller_view(request, id='0'):
 
     for demand_obj in demand_objs:
         demand_obj.price = '%.2f' % (demand_obj.price / 100.0)
+        demand_obj.category = category_converter(demand_obj.category)
 
     context['demands'] = demand_objs
     

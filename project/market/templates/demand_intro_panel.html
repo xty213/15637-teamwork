@@ -14,7 +14,7 @@
                                                 <div class="item-right-col nopic">
                                                     <h3 class="item-title nopic">{{demand.name}}</h3>
                                                     <span class="item-price nopic">Price: <span class="curr-price">${{demand.price}}</span></span>
-                                                    <p class="item-andrew-id nopic">{{demand.user.username}} posted</p>
+                                                    <p class="item-andrew-id nopic">{{demand.user.username}} posted at {{demand.time|date:"m/d/Y H:i"}}</p>
                                                     <p class="item-description nopic">
                                                         {{demand.description|linebreaksbr}}
                                                     </p>
