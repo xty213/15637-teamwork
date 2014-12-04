@@ -519,6 +519,9 @@ def seller_view(request, id='0'):
     else:
         demand_objs = Demand.objects.filter(category__exact=id).filter(is_closed__exact=False)
 
+    for demand_obj in demand_objs:
+        demand_obj.price = '%.2f' % (demand_obj.price / 100.0)
+
     context['demands'] = demand_objs
     
     return render(request, 'seller_view.html', context)
@@ -770,4 +773,23 @@ def delete_message(request, id):
         return HttpResponse('success')
     else:
         raise Http404
+
+@login_required
+def post_demand(request):
+    form = PostDemandForm(request.POST)
+
+    if not form.is_valid():
+        return redirect(reverse('buyer_view'))
+
+    demand = Demand()
+    demand.name = form.cleaned_data.get('name')
+    demand.description = form.cleaned_data.get('description')
+    demand.category = form.cleaned_data.get('category')
+    demand.price = int(form.cleaned_data.get('price') * 100)
+    demand.user = request.user
+    demand.save()
+
+    return redirect(reverse('seller_view', args=[demand.category]))
+
+
 

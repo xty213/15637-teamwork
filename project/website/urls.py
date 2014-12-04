@@ -33,4 +33,5 @@ urlpatterns = patterns('',
     url(r'^show_message/(?P<id>\d+)$', views.show_message, name='show_message'),
     url(r'^send_message/(?P<username>[a-zA-Z0-9_@\+\-]+)$', views.send_message, name='send_message'),
     url(r'^delete_message/(?P<id>\d+)$', views.delete_message, name='delete_message'),
+    url(r'^post_demand/$', views.post_demand, name='post_demand'),
 )

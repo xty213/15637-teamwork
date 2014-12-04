@@ -67,3 +67,9 @@ class PostItemForm(forms.Form):
 
         return cleaned_data
 
+
+class PostDemandForm(forms.Form):
+    name = forms.CharField(max_length=128)
+    category = forms.IntegerField(required=True)
+    price = forms.FloatField()
+    description = forms.CharField(max_length=1024, required=False)
