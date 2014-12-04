@@ -5,10 +5,10 @@
             <div id="left-nav">
                 <h2>My Account</h2>
                 <ul>
-                    <li><a href="#">Account Info</a></li>
-                    <li><a href="#">Transaction History</a></li>
-                    <li><a href="#">Messages</a></li>
-                    <li><a href="#">Settings</a></li>
+                    <li><a href="javascript:void(0)" onclick="showTab('#account-info-tab');">Account Info</a></li>
+                    <li><a href="javascript:void(0)" onclick="showTab('#trans-hist-tab');">Transaction History</a></li>
+                    <li><a href="javascript:void(0)" onclick="showTab('#message-tab');">Messages</a></li>
+                    <li><a href="javascript:void(0)" onclick="showTab('#setting-tab');">Settings</a></li>
                     <li><a href="{% url 'logout' %}">Logout</a></li>
                 </ul>
             </div>
@@ -26,7 +26,7 @@
                         </dl>
                     </div>
 
-                    <div id="trans-hist-tab" class="my-account-tab">
+                    <div id="trans-hist-tab" class="my-account-tab" style="display:none;">
                         <h3>Transaction History</h3>
                         <table class="table table-hover">
                             <caption>Items you bought</caption>
@@ -44,9 +44,7 @@
                         </table>
                     </div>
 
-                    <div id="setting-tab" class="my-account-tab" style="display:none;"></div>
-
-                    <div id="message-tab" class="tabbable my-account-tab">
+                    <div id="message-tab" class="tabbable my-account-tab" style="display:none;">
                         <ul class="nav nav-tabs">
                             <li class="active">
                                 <a href="#inbox-panel" data-toggle="tab">Inbox</a>
@@ -74,6 +72,9 @@
                             </div>
                         </div>
                     </div>
+
+                    <div id="setting-tab" class="my-account-tab" style="display:none;"></div>
+
                 </div>
             </div>
         </div>
@@ -82,4 +83,5 @@
 
 {% block additional_js %}
 <script src="/static/js/rate.js"></script>
+<script src="/static/js/my_account_tab_ctrl.js"></script>
 {% endblock %}
