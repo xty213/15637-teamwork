@@ -177,4 +177,21 @@ $(document).ready(function() {
         );
         return false;
     });
+
+    $("#form-off-the-shelf").submit(function(e){
+        $.post($("#form-off-the-shelf").attr('action'), {
+                    'itemid':$("#form-off-the-shelf input[name='itemid']").val(),
+                    "csrfmiddlewaretoken":$("#form-off-the-shelf input[name='csrfmiddlewaretoken']").val()
+                    },
+                function(data){
+                    if(data != "success"){
+                        swal("Opps! An error?", "Something wrong with your request.\nThe error message is \"" + data + "\"\nPlease try again later.", "error");
+                    }
+                    else{
+                        swal({title: "Success!", text: "The item is off the shelf now.\nRedirecting in 3 seconds...", type: "success", timer: 3000 });
+                        setTimeout(function(){ window.location="/"; }, 3000);
+                    }
+                });
+        return false;
+    });
 });
