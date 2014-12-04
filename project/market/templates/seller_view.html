@@ -38,14 +38,23 @@
                     <div class="tabbable">
                         <ul class="nav nav-tabs">
                             <li class="active">
-                                <a href="#item-posting-panel" data-toggle="tab">Item Posting</a>
+                                <a href="#demand-list-panel" data-toggle="tab">Demand List</a>
                             </li>
                             <li>
-                                <a href="#demand-list-panel" data-toggle="tab">Demand List</a>
+                                <a href="#item-posting-panel" data-toggle="tab">Item Posting</a>
                             </li>
                         </ul>
                         <div class="tab-content">
-                            <div class="tab-pane active" id="item-posting-panel">
+                            <div class="tab-pane active" id="demand-list-panel">
+                                <ul id="demand-list">
+                                    {% for demand in demands %}
+                                    <li>
+                                        {% include 'demand_intro_panel.html' %}
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="tab-pane" id="item-posting-panel">
                                 <form class="form-horizontal" method="post" action="{% url 'post_item' %}" enctype="multipart/form-data">
                                     <div class="form-group">
                                         <div class="col-sm-3"></div>
@@ -124,15 +133,6 @@
                                     </div>
                                     {% csrf_token %}
                                 </form>
-                            </div>
-                            <div class="tab-pane" id="demand-list-panel">
-                                <ul id="demand-list">
-                                    {% for demand in demands %}
-                                    <li>
-                                        {% include 'demand_intro_panel.html' %}
-                                    </li>
-                                    {% endfor %}
-                                </ul>
                             </div>
                         </div>
                     </div>
