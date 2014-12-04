@@ -511,8 +511,16 @@ def place_bid(request):
     return HttpResponse('success')
 
 @login_required
-def seller_view(request):
+def seller_view(request, id='0'):
     context = {'mode':'seller_view'}
+
+    if id == '0':
+        demand_objs = Demand.objects.filter(is_closed__exact=False)
+    else:
+        demand_objs = Demand.objects.filter(category__exact=id).filter(is_closed__exact=False)
+
+    context['demands'] = demand_objs
+    
     return render(request, 'seller_view.html', context)
 
 @login_required

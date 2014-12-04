@@ -1,0 +1,23 @@
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <p class="item-category panel-title pull-left">{{demand.category}}</p>
+                                                <a class="btn btn-default pull-right" href="#">I have it!</a>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="item-left-col nopic">
+                                                    <p class="item-photo">
+                                                    </p>
+                                                    <ul class="item-photo-list">
+                                                    </ul>
+                                                </div>
+                                                <div class="item-right-col nopic">
+                                                    <h3 class="item-title nopic">{{demand.name}}</h3>
+                                                    <span class="item-price nopic">Price: <span class="curr-price">${{demand.price}}</span></span>
+                                                    <p class="item-andrew-id nopic">{{demand.user.username}} posted</p>
+                                                    <p class="item-description nopic">
+                                                        {{demand.description|linebreaksbr}}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
