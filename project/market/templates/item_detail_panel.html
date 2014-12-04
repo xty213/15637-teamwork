@@ -6,31 +6,55 @@
                                                 {% else %}
                                                     <div id="heading-btn-group">
                                                         {% if item.is_auction %}
+                                                        {% if not item.sold_by_curr_user %}
                                                         <form id="form-place-bid" method="post" action="{% url 'place_bid' %}">
                                                             <input type="hidden" name="itemid" value="{{item.id}}">
                                                             <input type="hidden" name="bid_price" value="">
                                                             <input type="hidden" name="curr_user" value="{{item.curr_username}}">
                                                             {% csrf_token %}
-                                                            <button type="submit" class="btn btn-danger pull-right" {% if item.sold_by_curr_user %}disabled="disabled"{% endif %}>Place Bid</button>
+                                                            <button type="submit" class="btn btn-danger pull-right">Place Bid</button>
                                                         </form>
+                                                        {% endif %}
                                                         {% else %}
+                                                        {% if not item.sold_by_curr_user %}
                                                         <form method="post" action="{% url 'pay_by_paypal' %}">
                                                             <input type="hidden" name="itemid" value="{{item.id}}">
                                                             {% csrf_token %}
-                                                            <button type="submit" class="btn btn-danger pull-right" {% if item.sold_by_curr_user or paypal_pending or paypal_complete %}disabled="disabled"{% endif %}>Pay by PayPal</button>
+                                                            <button type="submit" class="btn btn-danger pull-right" {% if paypal_pending or paypal_complete %}disabled="disabled"{% endif %}>Pay by PayPal</button>
                                                         </form>
+                                                        {% endif %}
+                                                        {% if not item.sold_by_curr_user %}
                                                         <form id="form-fixed-price" method="post" action="{% url 'buy_fixed_price_item' %}">
                                                             <input type="hidden" name="itemid" value="{{item.id}}">
                                                             {% csrf_token %}
-                                                            <button type="submit" class="btn btn-danger pull-right" {% if item.sold_by_curr_user or paypal_pending or paypal_complete %}disabled="disabled"{% endif %}>Order This</button>
+                                                            <button type="submit" class="btn btn-danger pull-right"
+                                                                {% if paypal_pending or paypal_complete %}
+                                                                    disabled="disabled"
+                                                                {% endif %}>
+                                                                Order This</button>
                                                         </form>
                                                         {% endif %}
+                                                        {% endif %}
+                                                        {% if not item.sold_by_curr_user %}
                                                         <form id="form-ask-question" method="post" action="{% url 'ask_question' %}">
                                                             <input type="hidden" name="itemid" value="{{item.id}}">
                                                             <input type="hidden" name="question" value="">
                                                             {% csrf_token %}
-                                                            <button type="submit" class="btn btn-default pull-right" {% if item.sold_by_curr_user %}disabled="disabled"{% endif %}>Ask Question</button>
+                                                            <button type="submit" class="btn btn-default pull-right">Ask Question</button>
                                                         </form>
+                                                        {% endif %}
+                                                        {% if item.sold_by_curr_user %}
+                                                        <form id="form-off-the-shelf" method="post" action="{% url 'off_the_shelf' %}">
+                                                            <input type="hidden" name="itemid" value="{{item.id}}">
+                                                            {% csrf_token %}
+                                                            <button type="submit" class="btn btn-default pull-right"
+                                                                {% if item.bid_log|length %}
+                                                                disabled="disabled"
+                                                                {% endif %}
+                                                                >Off the Shelf
+                                                            </button>
+                                                        </form>
+                                                        {% endif %}
                                                     </div>
                                                 {% endif %} 
                                                 <div class="clearfix"></div>

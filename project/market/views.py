@@ -297,6 +297,23 @@ def post_item(request):
     return redirect(reverse('item_detail', args=[item.id]))
 
 @login_required
+def off_the_shelf(request):
+    if not 'itemid' in request.POST or not request.POST["itemid"]:
+        return HttpResponse('missing itemid')
+
+    item = None
+    try:
+        item = Item.objects.get(id__exact=request.POST["itemid"])
+    except Item.DoesNotExist:
+        return HttpResponse('invalid itemid')
+
+    if item.transaction.seller.username != request.user.username:
+        return HttpResponse('you are not the seller')
+
+    item.delete();
+    return HttpResponse('success')
+
+@login_required
 def get_item_pic(request, itemid, index):
     item = get_object_or_404(Item, id=itemid)
 
