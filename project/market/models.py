@@ -54,6 +54,7 @@ class BidLog(models.Model):
 class Demand(models.Model):
     name = models.CharField(max_length=128)
     description = models.CharField(max_length=1024, null=True, blank=True)
+    category = models.IntegerField(null=True, blank=True)
     price = models.IntegerField(null=True, blank=True)
     user = models.ForeignKey(User, related_name="demands")
     is_closed = models.BooleanField(default=False)
