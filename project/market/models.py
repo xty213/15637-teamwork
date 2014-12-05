@@ -48,7 +48,7 @@ class BidLog(models.Model):
     transaction = models.ForeignKey(Transaction, related_name="bid_logs")
 
     def __unicode__(self):
-        return self.bid_price
+        return "%s %.2f" % (self.user.username, float(self.bid_price)/100)
 
 
 class Demand(models.Model):
