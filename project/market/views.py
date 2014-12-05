@@ -188,7 +188,7 @@ def item_detail(request, id):
     item_obj = get_object_or_404(Item, id=id)
     seller_obj = item_obj.transaction.seller
 
-    seller = {'name':seller_obj.username}
+    seller = {'name':seller_obj.username, 'email':seller_obj.email}
     rates = [x for x in map(lambda x:x.buyer_rate, Transaction.objects.filter(seller__exact=seller_obj)) if x]
     if len(rates) > 0:
         rate = int(round(sum(rates) / float(len(rates)), 0))
@@ -310,6 +310,10 @@ def off_the_shelf(request):
     if item.transaction.seller.username != request.user.username:
         return HttpResponse('you are not the seller')
 
+    if item.transaction.buyer:
+        return HttpResponse('already have a buyer')
+
+    item.transaction.delete()
     item.delete();
     return HttpResponse('success')
 
