@@ -91,6 +91,12 @@
         <div id="right-col" class="pull-right container">
             <div class="row">
                 <div class="span12">
+                    {% for error in errors %}
+                    <div class="alert alert-danger alert-dismissible" role="alert" style="padding:">
+                      <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                      <strong>Error!</strong> {{error}}
+                    </div>
+                    {% endfor %}
                     <div id="account-info-tab" class="my-account-tab">
                         <h3>Account Info</h3>
                         <dl>
@@ -152,7 +158,36 @@
                         </div>
                     </div>
 
-                    <div id="setting-tab" class="my-account-tab" style="display:none;"></div>
+                    <div id="setting-tab" class="my-account-tab" style="display:none;">
+                      <h3>Settings</h3>
+                      <form class="form-horizontal" role="form" method="post" action="{% url 'self_reset_password' %}">
+                        <div class="form-group">
+                          <label for="password0" class="col-sm-3 control-label">Current Password</label>
+                          <div class="col-sm-9">
+                            <input type="password" class="form-control" id="password0" name="password0" placeholder="Current Password">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label for="password1" class="col-sm-3 control-label">New Password</label>
+                          <div class="col-sm-9">
+                            <input type="password" class="form-control" id="password1" name="password" placeholder="New Password">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label for="password2" class="col-sm-3 control-label">Confirm Password</label>
+                          <div class="col-sm-9">
+                            <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm Password">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <div class="col-sm-offset-3 col-sm-9">
+                            <button type="submit" class="btn btn-default">Reset</button>
+                          </div>
+                        </div>
+                        {% csrf_token %}
+                      </form>
+
+                    </div>
 
                 </div>
             </div>

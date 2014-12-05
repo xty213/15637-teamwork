@@ -909,4 +909,56 @@ A user with Andrew ID %s says he or she has the item in your demand list. Login 
 
     return redirect(request.META['HTTP_REFERER'])
 
+@login_required
+def self_reset_password(request):
+    context = {'mode':'my_account', 'user':request.user}
+    transcations_bought = []
+    context['transcations_bought'] = transcations_bought
+    transcations_sold = []
+    context['transcations_sold'] = transcations_sold
+    inbox = []
+    context['inbox'] = inbox
+    outbox = []
+    context['outbox'] = outbox
 
+    for trans in Transaction.objects.filter(buyer__exact=request.user):
+        trans.deal_price /= 100.0
+        transcations_bought.append(trans)
+
+    for trans in Transaction.objects.filter(seller__exact=request.user):
+        trans.deal_price /= 100.0
+        transcations_sold.append(trans)
+
+    for message in ShortMessage.objects.filter(receiver__exact=request.user).filter(deleted_by_receiver__exact=False).order_by('-time'):
+        inbox.append(message)
+
+    for message in ShortMessage.objects.filter(sender__exact=request.user).filter(deleted_by_sender__exact=False).order_by('-time'):
+        outbox.append(message)
+
+    errors = []
+    context['errors'] = errors
+
+    user = request.user
+
+    if not 'password0' in request.POST or not request.POST['password0']:
+        errors.append('Current password is required.')
+        return render(request, 'my_account.html', context)
+
+    if not user.check_password(request.POST['password0']):
+        errors.append('Current password is incorrect.')
+        return render(request, 'my_account.html', context)
+
+    form = ResetPasswordForm(request.POST)
+    if not form.is_valid():
+        for field, form_errors in form.errors.items():
+            for error in form_errors:
+                errors.append(error)
+        return render(request, 'my_account.html', context)
+
+    user.set_password(form.cleaned_data.get('password'))
+    user.save()
+
+    user.backend = 'django.contrib.auth.backends.ModelBackend'
+    login(request, user)
+
+    return render(request, 'my_account.html', context)
