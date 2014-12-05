@@ -36,4 +36,5 @@ urlpatterns = patterns('',
     url(r'^post_demand/$', views.post_demand, name='post_demand'),
     url(r'^off_the_shelf/$', views.off_the_shelf, name='off_the_shelf'),
     url(r'^close_demand/$', views.close_demand, name='close_demand'),
+    url(r'^i_have_it/(?P<id>\d+)$', views.i_have_it, name='i_have_it'),
 )

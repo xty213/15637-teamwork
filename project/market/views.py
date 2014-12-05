@@ -891,3 +891,22 @@ def close_demand(request):
 
     return redirect(request.META['HTTP_REFERER'])
 
+@login_required
+def i_have_it(request, id):
+    demand = get_object_or_404(Demand, id=id)
+
+    if demand.is_closed:
+        raise Http404
+    
+    email_body = """
+A user with Andrew ID %s says he or she has the item in your demand list. Login to https://%s to check and buy.
+""" % (request.user.username, request.get_host())
+    
+    send_mail(subject='Someone can satisfy your demand',
+              message=email_body,
+              from_email='noreply.OFM.CMU@gmail.com',
+              recipient_list=[demand.user.email])
+
+    return redirect(request.META['HTTP_REFERER'])
+
+
