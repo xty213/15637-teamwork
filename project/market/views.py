@@ -338,6 +338,9 @@ def get_item_pic(request, itemid, index):
     return HttpResponse(pic, content_type=content_type)
 
 def check_due_auction(request):
+    if not 'dns' in request.GET or not request.GET['dns']:
+        return HttpResponse('error')
+    
     transactions = Transaction.objects.filter(is_auction__exact=True) \
                                       .filter(is_closed__exact=False) \
                                       .filter(end_time__lte=timezone.now());
@@ -354,7 +357,7 @@ Item description: %s
 Item price: $%.2f
 
 Check more details at https://%s%s
-""" % (trans.buyer, trans.seller, trans.item.name, trans.item.description, float(trans.deal_price)/100, request.get_host(), reverse('item_detail', args=[trans.item.id]))
+""" % (trans.buyer, trans.seller, trans.item.name, trans.item.description, float(trans.deal_price)/100, request.GET['dns'], reverse('item_detail', args=[trans.item.id]))
 
             send_mail(subject='A deal!',
                       message=email_body,
@@ -368,7 +371,7 @@ Item description: %s
 Item price: $%.2f
 
 Check more details at https://%s%s
-""" % (trans.seller, trans.item.name, trans.item.description, float(trans.deal_price)/100, request.get_host(), reverse('item_detail', args=[trans.item.id]))
+""" % (trans.seller, trans.item.name, trans.item.description, float(trans.deal_price)/100, request.GET['dns'], reverse('item_detail', args=[trans.item.id]))
 
             send_mail(subject='The item is not sold',
                       message=email_body,
