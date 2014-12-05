@@ -2,7 +2,11 @@
                                             <div class="panel-heading">
                                                 <p class="item-category panel-title pull-left">{{item.category}}</p>
                                                 {% if item.is_closed %}
+                                                    {% if item.bid_log %}
+                                                    <p class="pull-right text-danger">Closed at {{item.deal_time|date:"m/d/Y H:i"}}</p>
+                                                    {% else %}
                                                     <p class="pull-right text-danger">Sold at {{item.deal_time|date:"m/d/Y H:i"}}</p>
+                                                    {% endif %}
                                                 {% else %}
                                                     <div id="heading-btn-group">
                                                         {% if item.is_auction %}
@@ -48,7 +52,7 @@
                                                             <input type="hidden" name="itemid" value="{{item.id}}">
                                                             {% csrf_token %}
                                                             <button type="submit" class="btn btn-default pull-right"
-                                                                {% if item.bid_log|length %}
+                                                                {% if not item.is_closed and item.bid_log|length %}
                                                                 disabled="disabled"
                                                                 {% endif %}
                                                                 >Off the Shelf
