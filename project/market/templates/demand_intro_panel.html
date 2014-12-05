@@ -1,7 +1,17 @@
                                         <div class="panel panel-default">
                                             <div class="panel-heading">
                                                 <p class="item-category panel-title pull-left">{{demand.category}}</p>
-                                                <a class="btn btn-default pull-right" href="#">I have it!</a>
+                                                <div class="heading-btn-group">
+                                                    {% if demand.posted_by_curr_user %}
+                                                    <form method="post" action="{% url 'close_demand' %}">
+                                                        <input type="hidden" name="demandid" value="{{demand.id}}">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn btn-danger pull-right">Close</button>
+                                                    </form>
+                                                    {% else %}
+                                                    <a class="btn btn-default pull-right" href="#">I Have It!</a>
+                                                    {% endif %}
+                                                </div>
                                                 <div class="clearfix"></div>
                                             </div>
                                             <div class="panel-body">

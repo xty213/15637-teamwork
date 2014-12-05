@@ -539,6 +539,7 @@ def seller_view(request, id='0'):
     for demand_obj in demand_objs:
         demand_obj.price = '%.2f' % (demand_obj.price / 100.0)
         demand_obj.category = category_converter(demand_obj.category)
+        demand_obj.posted_by_curr_user = demand_obj.user == request.user
 
     context['demands'] = demand_objs
     
@@ -809,5 +810,18 @@ def post_demand(request):
 
     return redirect(reverse('seller_view', args=[demand.category]))
 
+@login_required
+def close_demand(request):
+    if not 'demandid' in request.POST or not request.POST['demandid']:
+        raise Http404
 
+    demand = get_object_or_404(Demand, id=request.POST['demandid'])
+
+    if not demand.user == request.user or demand.is_closed:
+        raise Http404
+
+    demand.is_closed = True
+    demand.save()
+
+    return redirect(request.META['HTTP_REFERER'])
 
