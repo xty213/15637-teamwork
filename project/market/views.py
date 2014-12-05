@@ -629,7 +629,10 @@ def search(request):
         raise Http404
 
     context = {}
-
+    context['sort_by_price_url'] = reverse('search') + '?keyword=' + request.GET['keyword'] + '&mode=' + request.GET['mode'] \
+        + '&category=' + request.GET['category'] + '&sortby=price'
+    context['sort_by_time_url'] = reverse('search') + '?keyword=' + request.GET['keyword'] + '&mode=' + request.GET['mode'] \
+        + '&category=' + request.GET['category'] + '&sortby=time'
 
     if request.GET['mode'] == 'items':
         context['mode'] = 'buyer_view'
