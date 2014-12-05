@@ -61,15 +61,24 @@ LOGIN_URL = '/login/'
 
 LOGIN_REDIRECT_URL = '/'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'noreply.ofm.cmu@gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_PASSWORD = 'onlinefleamarket'
+EMAIL_USE_TLS = True
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+	'NAME': 'webapp',
+	'USER': 'webapp',
+	'PASSWORD': 'password',
+	'HOST': '',
+	'PORT': '',
     }
 }
 
