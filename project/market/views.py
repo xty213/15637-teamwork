@@ -340,7 +340,7 @@ def get_item_pic(request, itemid, index):
 def check_due_auction(request):
     if not 'dns' in request.GET or not request.GET['dns']:
         return HttpResponse('error')
-    
+
     transactions = Transaction.objects.filter(is_auction__exact=True) \
                                       .filter(is_closed__exact=False) \
                                       .filter(end_time__lte=timezone.now());
@@ -488,6 +488,22 @@ def finish_paypal_payment(request, id):
         trans.is_closed = True
         trans.paykey = None
         trans.save()
+
+        email_body = """The following item is bought by %s:
+Seller: %s
+Item name: %s
+Item description: %s
+Item price: $%.2f
+
+The buyer has paid for this item.
+
+Check more details at https://%s%s
+""" % (trans.buyer, trans.seller, item.name, item.description, float(trans.deal_price)/100, request.get_host(), reverse('item_detail', args=[item.id]))
+
+        send_mail(subject='A deal!',
+                  message=email_body,
+                  from_email='noreply.OFM.CMU@gmail.com',
+                  recipient_list=[trans.seller.email, trans.buyer.email])
         return redirect("https://%s/item_detail/%d?pay_status=success" % (request.get_host(), item.id))
     return redirect("https://%s/item_detail/%d" % (request.get_host(), item.id))
 
