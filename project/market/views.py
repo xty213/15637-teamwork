@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, JsonResponse
 
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.decorators import login_required
@@ -739,34 +739,48 @@ def rate(request):
 
 @login_required
 def show_message(request, id):
-    message = get_object_or_404(ShortMessage, id=id)
+    message = None
+    try:
+        message = ShortMessage.objects.get(id__exact=id)
+    except ShortMessage.DoesNotExist:
+        return HttpResponse("invalid message id")
 
-    context = {}
-    if message.sender == request.user:
-        context['title'] = message.title
-        context['receiver'] = message.receiver
-        context['content'] = message.content
-        return render(request, 'show_message.html', context)
-    elif message.receiver == request.user:
-        context['title'] = message.title
-        context['sender'] = message.sender
-        context['content'] = message.content
-        return render(request, 'show_message.html', context)
-    else:
-        raise Http404
+    if message.sender != request.user and message.receiver != request.user:
+        return HttpResponse('not the sender nor the receiver')
+
+    json = {}
+    json['title'] = message.title
+    json['sender'] = message.sender.username
+    json['receiver'] = message.receiver.username
+    json['content'] = message.content
+
+    return JsonResponse(json)
 
 @login_required
-def send_message(request, username):
+def send_message(request):
+    if not 'username' in request.POST or not request.POST['username']:
+        return HttpResponse('no username')
+
+    if request.POST['username'] == request.user.username:
+        return HttpResponse('cannot send message to yourself')
+
     user = None
     try:
         user = User.objects.get(username__exact=request.POST['username'])
-    except Item.DoesNotExist:
+    except User.DoesNotExist:
         return HttpResponse('invalid username')
 
     if not 'title' in request.POST or not request.POST['title']:
         return HttpResponse('title is missing')
+
+    if len(request.POST['title']) > 42:
+        return HttpResponse('title is too long, max length is 42')
+
     if not 'content' in request.POST:
         raise HttpResponse('content is missing')
+
+    if len(request.POST['content']) > 1024:
+        return HttpResponse('content is too long, max length is 1024')
 
     message = ShortMessage()
     message.sender = request.user
@@ -775,22 +789,28 @@ def send_message(request, username):
     message.content = request.POST['content']
     message.save()
 
-    return HttpResponse('success')
+    return HttpResponse('success %d' % message.id)
 
 @login_required
 def delete_message(request, id):
-    message = get_object_or_404(ShortMessage, id=id)
+    message = None
+    try:
+        message = ShortMessage.objects.get(id__exact=id)
+    except ShortMessage.DoesNotExist:
+        return HttpResponse("invalid message id")
 
     if message.sender == request.user:
         message.deleted_by_sender = True
-        message.save()
-        return HttpResponse('success')
     elif message.receiver == request.user:
         message.deleted_by_receiver = True
-        message.save()
-        return HttpResponse('success')
     else:
-        raise Http404
+        return HttpResponse('not the sender nor the receiver')
+
+    if message.deleted_by_receiver and message.deleted_by_receiver:
+        message.delete()
+    
+    message.save()
+    return HttpResponse('success')
 
 @login_required
 def post_demand(request):

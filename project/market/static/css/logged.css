@@ -15,6 +15,11 @@ body a, body a:hover{
     color: #990000;
 }
 
+.form-control[readonly]{
+    cursor: auto;
+    background-color: inherit;
+}
+
 /* header begin */
 
 #header{

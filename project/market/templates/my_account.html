@@ -1,6 +1,81 @@
 {% extends 'logged_base.html' %}
 
 {% block main_content %}
+<div class="modal fade" id="new-msg-modal" tabindex="-1" role="dialog" aria-labelledby="new-msg-modal-label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="new-msg-modal-label">Compose New Message</h4>
+      </div>
+      <div class="modal-body">
+        <form id="new-msg-form" class="form-horizontal" method="post" action="{% url 'send_message' %}">
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Receiver</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" name="username" placeholder="AndrewID">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Title</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" name="title">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Content</label>
+              <div class="col-sm-10">
+                <textarea name="content" class="form-control"></textarea>
+              </div>
+            </div>
+            {% csrf_token %}
+            <div class="clearfix">
+                <button type="submit" class="btn btn-danger pull-right" style="margin-left: 10px;">Send</button>
+                <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancel</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="show-msg-modal" tabindex="-1" role="dialog" aria-labelledby="show-msg-modal-label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header clear">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="show-msg-modal-label"></h4>
+      </div>
+      <div class="modal-body">
+        <form id="show-msg-form" class="form-horizontal">
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Receiver</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" name="receiver" readonly="readonly">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Sender</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" name="sender" readonly="readonly">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Content</label>
+              <div class="col-sm-10">
+                <textarea name="content" class="form-control" readonly="readonly"></textarea>
+              </div>
+            </div>
+            <div class="clearfix">
+                <button id="reply-msg-btn" type="button" class="btn btn-danger pull-right" style="margin-left: 10px;" onclick="prepReplyMsgBox();">Reply</button>
+                <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cancel</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
         <div id="left-col" class="pull-left">
             <div id="left-nav">
                 <h2>My Account</h2>
@@ -30,14 +105,14 @@
                         <h3>Transaction History</h3>
                         <table class="table table-hover">
                             <caption>Items you bought</caption>
-                            <tr><th>Item</th><th>Deal Price</th><th>Deal Time</th><th>Recieved Rate</th><th>Rate on Seller</th></tr>
+                            <tr><th>Item</th><th>Deal Price</th><th>Deal Time</th><th>Received Rate</th><th>Rate on Seller</th></tr>
                             {% for transaction in transcations_bought %}
                             <tr><td><a href="{% url 'item_detail' transaction.item.id %}">{{transaction.item.name}}</a></td><td>${{transaction.deal_price|floatformat:2}}</td><td>{{transaction.deal_time|date:"m/d/Y H:i"}}</td><td>{% if transaction.seller_rate %}{{transaction.seller_rate}}/5{% else %}N/A{% endif %}</td><td>{% if transaction.buyer_rate %}{{transaction.buyer_rate}}/5{% elif transaction.is_closed %}<form class="form-rate" action="{% url 'rate' %}" method="post"><input type="hidden" name="itemid" value="{{transaction.item.id}}"><input type="hidden" name="mode" value="rate_on_seller"><input type="hidden" name="rate">{% csrf_token %}<button type="submit" class="btn btn-default btn-xs">Rate Now</button></form>{% else %}N/A{% endif %}</td></tr>
                             {% endfor %}
                         </table>
                         <table class="table table-hover">
                             <caption>Items you sold or are selling</caption>
-                            <tr><th>Item</th><th>Deal Price</th><th>Deal Time</th><th>Recieved Rate</th><th>Rate on Buyer</th></tr>
+                            <tr><th>Item</th><th>Deal Price</th><th>Deal Time</th><th>Received Rate</th><th>Rate on Buyer</th></tr>
                             {% for transaction in transcations_sold %}
                             <tr><td><a href="{% url 'item_detail' transaction.item.id %}">{{transaction.item.name}}</a></td><td>${{transaction.deal_price|floatformat:2}}</td><td>{{transaction.deal_time|date:"m/d/Y H:i"}}</td><td>{% if transaction.buyer_rate %}{{transaction.buyer_rate}}/5{% else %}N/A{% endif %}</td><td>{% if transaction.seller_rate %}{{transaction.seller_rate}}/5{% elif transaction.is_closed %}<form class="form-rate" action="{% url 'rate' %}" method="post"><input type="hidden" name="itemid" value="{{transaction.item.id}}"><input type="hidden" name="mode" value="rate_on_buyer"><input type="hidden" name="rate">{% csrf_token %}<button type="submit" class="btn btn-default btn-xs">Rate Now</button></form>{% else %}N/A{% endif %}</td></tr>
                             {% endfor %}
@@ -45,6 +120,10 @@
                     </div>
 
                     <div id="message-tab" class="tabbable my-account-tab" style="display:none;">
+                        <div class="clearfix">
+                            <button type="button" class="btn btn-danger pull-right" onclick="showNewMsgModal();">Compose New Message</button>
+                            <h3 class="pull-left">Messages</h3>
+                        </div>
                         <ul class="nav nav-tabs">
                             <li class="active">
                                 <a href="#inbox-panel" data-toggle="tab">Inbox</a>
@@ -58,7 +137,7 @@
                                 <table class="table table-hover">
                                     <tr><th>Title</th><th>Sender</th><th>Time</th><th></th></tr>
                                     {% for message in inbox %}
-                                    <tr><td><a href="{% url 'show_message' message.id %}">{{message.title}}</a></td><td>{{message.sender}}</td><td>{{message.time|date:"m/d/Y H:i"}}</td><td><a href="{% url 'delete_message' message.id %}">Delete</a></td></tr>
+                                    <tr id="table-row-{{message.id}}"><td><a href="javascript:void(0);" onclick="showMsg({{message.id}}, true);">{{message.title}}</a></td><td>{{message.sender}}</td><td>{{message.time|date:"m/d/Y H:i"}}</td><td><a href="javascript:void(0);" onclick="delMsg({{message.id}});">Delete</a></td></tr>
                                     {% endfor %}
                                 </table>
                             </div>
@@ -66,7 +145,7 @@
                                 <table class="table table-hover">
                                     <tr><th>Title</th><th>Receiver</th><th>Time</th><th></th></tr>
                                     {% for message in outbox %}
-                                    <tr><td><a href="{% url 'show_message' message.id %}">{{message.title}}</a></td><td>{{message.receiver}}</td><td>{{message.time|date:"m/d/Y H:i"}}</td><td><a href="{% url 'delete_message' message.id %}">Delete</a></td></tr>
+                                    <tr id="table-row-{{message.id}}"><td><a href="javascript:void(0);" onclick="showMsg({{message.id}}, false);">{{message.title}}</a></td><td>{{message.receiver}}</td><td>{{message.time|date:"m/d/Y H:i"}}</td><td><a href="javascript:void(0);" onclick="delMsg({{message.id}});">Delete</a></td></tr>
                                     {% endfor %}
                                 </table>
                             </div>
@@ -84,4 +163,87 @@
 {% block additional_js %}
 <script src="/static/js/rate.js"></script>
 <script src="/static/js/my_account_tab_ctrl.js"></script>
+<script>
+$(document).ready(function(){
+    $("#new-msg-form").submit(function(e){
+        $.post($("#new-msg-form").attr('action'), {
+                    'username':$("#new-msg-form input[name='username']").val(),
+                    'title':$("#new-msg-form input[name='title']").val(),
+                    'content':$("#new-msg-form textarea[name='content']").val(),
+                    "csrfmiddlewaretoken":$("#new-msg-form input[name='csrfmiddlewaretoken']").val()
+                    },
+                function(data){
+                    if(data.indexOf("success") != 0){
+                        swal("Opps! An error?", "Something wrong with your request.\nThe error message is \"" + data + "\"\nPlease try again later.", "error");
+                    }
+                    else{
+                        $("#new-msg-modal").modal("hide");
+                        showNewMsgInOutbox(data.split(" ")[1],
+                                           $("#new-msg-form input[name='username']").val(),
+                                           $("#new-msg-form input[name='title']").val());
+                        swal({title: "The message is sent!", type: "success"});
+                    }
+                });
+        return false;
+    });
+});
+function showNewMsgModal(){
+    $("#new-msg-form input[name='username']").val("");
+    $("#new-msg-form input[name='title']").val("");
+    $("#new-msg-form textarea[name='content']").val("");
+    $("#new-msg-modal").modal("show");
+}
+function showNewMsgInOutbox(id, receiver, title){
+    $("<tr><td><a href='javascript:void(0);' onclick='showMsg(" + id + ", false)'>" + title + "</a></td><td>" + receiver + "</td><td>" + formatDate(new Date()) + "</td><td><a href='javascript:void(0);' onclick='delMsg(" + id + ")'>Delete</a></td></tr>").insertAfter("#outbox-panel table tbody tr:first-child");
+}
+
+function showMsg(id, showReplyBtn){
+    $.get("/show_message/"+id, function(data){
+        $("#show-msg-modal-label").text(data.title);
+        $("#show-msg-form input[name='receiver']").val(data.receiver);
+        $("#show-msg-form input[name='sender']").val(data.sender);
+        $("#show-msg-form textarea[name='content']").val(data.content);
+
+        if (showReplyBtn) {
+            $("#reply-msg-btn").show();
+        } else {
+            $("#reply-msg-btn").hide();
+        }
+        $("#show-msg-modal").modal("show");
+    });
+}
+
+function delMsg(id){
+    $.get("/delete_message/"+id, function(data){
+        if(data != "success"){
+            swal("Opps! An error?", "Something wrong with your request.\nThe error message is \"" + data + "\"\nPlease try again later.", "error");
+        } else {
+            swal({title: "The message is deleted!", type: "success"});
+            $("#table-row-" + id).remove();
+        }
+    });
+}
+
+function prepReplyMsgBox(){
+    $("#new-msg-form input[name='username']").val($("#show-msg-form input[name='sender']").val());
+    $("#new-msg-form input[name='title']").val("RE:" + $("#show-msg-modal-label").text().substring(0, 30));
+    $("#show-msg-modal").modal("hide");
+    $("#new-msg-modal").modal("show");
+}
+
+function formatDate(date) {
+    var year = date.getFullYear();
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var month = date.getMonth()+1;
+    var date = date.getDate();
+
+    hours = hours < 10 ? '0'+hours : hours;
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    month = month < 10 ? '0'+month : month;
+    date = date < 10 ? '0'+date : date;
+
+    return month + "/" + date + "/" + year + " " + hours + ':' + minutes;
+}
+</script>
 {% endblock %}

@@ -1,10 +1,16 @@
 function formatDate(date) {
     var hours = date.getHours();
     var minutes = date.getMinutes();
+    var month = date.getMonth()+1;
+    var date = date.getDate();
+    var year = date.getFullYear();
+
     hours = hours < 10 ? '0'+hours : hours;
     minutes = minutes < 10 ? '0'+minutes : minutes;
-    var strTime = hours + ':' + minutes;
-    return date.getMonth()+1 + "/" + date.getDate() + "/" + date.getFullYear() + " " + strTime;
+    month = month < 10 ? '0'+month : month;
+    date = date < 10 ? '0'+date : date;
+
+    return month + "/" + date + "/" + year + " " + hours + ':' + minutes;
 }
 
 function number_format(number, decimals, dec_point, thousands_sep) {
