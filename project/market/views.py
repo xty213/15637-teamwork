@@ -22,7 +22,7 @@ from tools import *
 import httplib
 import json
 import sys
-
+import operator
 
 def register(request):
     context = {}
@@ -539,6 +539,7 @@ def seller_view(request, id='0'):
     for demand_obj in demand_objs:
         demand_obj.price = '%.2f' % (demand_obj.price / 100.0)
         demand_obj.category = category_converter(demand_obj.category)
+        demand_obj.posted_by_curr_user = demand_obj.user == request.user
 
     context['demands'] = demand_objs
     
@@ -627,10 +628,11 @@ def search(request):
     if not 'category' in request.GET or not 0 <= int(request.GET['category']) <= 15:
         raise Http404
 
-    context = {'mode': 'buyer_view'}
+    context = {}
 
 
     if request.GET['mode'] == 'items':
+        context['mode'] = 'buyer_view'
         items = []
         context['items'] = items
         if not request.GET['keyword']:
@@ -681,9 +683,34 @@ def search(request):
 
         return render(request, 'search_item.html', context)
 
-    # TODO
     if request.GET['mode'] == 'demands':
-        raise Http404
+        context['mode'] = 'seller_view'
+
+        if not request.GET['keyword']:
+            if int(request.GET['category']) == 0:
+                demand_objs = Demand.objects.filter(is_closed__exact=False)
+            else:
+                demand_objs = Demand.objects.filter(is_closed__exact=False).filter(category__exact=request.GET['category'])
+        else:
+            if int(request.GET['category']) == 0:
+                demand_objs = Demand.objects.filter(is_closed__exact=False).filter(name__contains=request.GET['keyword']) \
+                    | Demand.objects.filter(is_closed__exact=False).filter(description__contains=request.GET['keyword'])
+            else:
+                demand_objs = Demand.objects.filter(is_closed__exact=False).filter(category__exact=request.GET['category']).filter(name__contains=request.GET['keyword']) \
+                    | Demand.objects.filter(is_closed__exact=False).filter(category__exact=request.GET['category']).filter(description__contains=request.GET['keyword'])
+
+        for demand_obj in demand_objs:
+            demand_obj.price = '%.2f' % (demand_obj.price / 100.0)
+            demand_obj.category = category_converter(demand_obj.category)
+            demand_obj.posted_by_curr_user = demand_obj.user == request.user
+
+        demand_objs = sorted(demand_objs, key=operator.attrgetter('time'), reverse=True)
+
+        context['demands'] = demand_objs
+
+        return render(request, 'search_demand.html', context)
+
+    raise Http404
 
 @login_required
 def rate(request):
@@ -829,5 +856,18 @@ def post_demand(request):
 
     return redirect(reverse('seller_view', args=[demand.category]))
 
+@login_required
+def close_demand(request):
+    if not 'demandid' in request.POST or not request.POST['demandid']:
+        raise Http404
 
+    demand = get_object_or_404(Demand, id=request.POST['demandid'])
+
+    if not demand.user == request.user or demand.is_closed:
+        raise Http404
+
+    demand.is_closed = True
+    demand.save()
+
+    return redirect(request.META['HTTP_REFERER'])
 

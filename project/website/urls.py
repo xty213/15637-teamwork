@@ -35,4 +35,5 @@ urlpatterns = patterns('',
     url(r'^delete_message/(?P<id>\d+)$', views.delete_message, name='delete_message'),
     url(r'^post_demand/$', views.post_demand, name='post_demand'),
     url(r'^off_the_shelf/$', views.off_the_shelf, name='off_the_shelf'),
+    url(r'^close_demand/$', views.close_demand, name='close_demand'),
 )
