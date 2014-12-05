@@ -188,7 +188,7 @@ def item_detail(request, id):
     item_obj = get_object_or_404(Item, id=id)
     seller_obj = item_obj.transaction.seller
 
-    seller = {'name':seller_obj.username}
+    seller = {'name':seller_obj.username, 'email':seller_obj.email}
     rates = [x for x in map(lambda x:x.buyer_rate, Transaction.objects.filter(seller__exact=seller_obj)) if x]
     if len(rates) > 0:
         rate = int(round(sum(rates) / float(len(rates)), 0))
@@ -310,6 +310,10 @@ def off_the_shelf(request):
     if item.transaction.seller.username != request.user.username:
         return HttpResponse('you are not the seller')
 
+    if item.transaction.buyer:
+        return HttpResponse('already have a buyer')
+
+    item.transaction.delete()
     item.delete();
     return HttpResponse('success')
 
@@ -332,6 +336,46 @@ def get_item_pic(request, itemid, index):
 
     content_type = guess_type(pic.name)
     return HttpResponse(pic, content_type=content_type)
+
+def check_due_auction(request):
+    transactions = Transaction.objects.filter(is_auction__exact=True) \
+                                      .filter(is_closed__exact=False) \
+                                      .filter(end_time__lte=timezone.now());
+    for trans in transactions:
+        trans.is_closed = True
+        trans.deal_time = timezone.now()
+        trans.save()
+
+        if trans.buyer != None:
+            email_body = """The following item is bought by %s:
+Seller: %s
+Item name: %s
+Item description: %s
+Item price: $%.2f
+
+Check more details at https://%s%s
+""" % (trans.buyer, trans.seller, trans.item.name, trans.item.description, float(trans.deal_price)/100, request.get_host(), reverse('item_detail', args=[trans.item.id]))
+
+            send_mail(subject='A deal!',
+                      message=email_body,
+                      from_email='noreply.OFM.CMU@gmail.com',
+                      recipient_list=[trans.seller.email, trans.buyer.email])
+        else:
+            email_body = """The following item is not sold:
+Seller: %s
+Item name: %s
+Item description: %s
+Item price: $%.2f
+
+Check more details at https://%s%s
+""" % (trans.seller, trans.item.name, trans.item.description, float(trans.deal_price)/100, request.get_host(), reverse('item_detail', args=[trans.item.id]))
+
+            send_mail(subject='The item is not sold',
+                      message=email_body,
+                      from_email='noreply.OFM.CMU@gmail.com',
+                      recipient_list=[trans.seller.email])
+
+    return HttpResponse("success")
 
 @transaction.atomic
 @login_required
@@ -517,7 +561,11 @@ def place_bid(request):
     if price - trans.deal_price < 50:
         return HttpResponse('the bid is too low')
 
+    if trans.is_closed:
+        return HttpResponse('the transaction is closed')
+
     trans.deal_price = price
+    trans.buyer = request.user
     trans.save()
 
     log = BidLog(bid_price=price,

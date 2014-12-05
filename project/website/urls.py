@@ -38,4 +38,5 @@ urlpatterns = patterns('',
     url(r'^close_demand/$', views.close_demand, name='close_demand'),
     url(r'^i_have_it/(?P<id>\d+)$', views.i_have_it, name='i_have_it'),
     url(r'^self_reset_password/$', views.self_reset_password, name='self_reset_password'),
+    url(r'^check_due_auction/$', views.check_due_auction, name='check_due_auction'),
 )
