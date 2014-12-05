@@ -52,7 +52,7 @@ def register(request):
     token = default_token_generator.make_token(new_user)
     email_body = """
 Welcome to the online flea market at CMU! Please click the following link to complete your registration:
-http://%s%s
+https://%s%s
 """ % (request.get_host(), reverse('confirm_registration', args=[new_user.username, token]))
 
     send_mail(subject='Verify your email address',
@@ -91,7 +91,7 @@ def send_verification_email(request):
     token = default_token_generator.make_token(user)
     email_body = """
 Please click the following link to reset your password:
-http://%s%s
+https://%s%s
 """ % (request.get_host(), reverse('reset_password', args=[user.username, token]))
 
     send_mail(subject='Reset your password',
