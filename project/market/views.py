@@ -679,12 +679,19 @@ def search(request):
 
             items.append(item)
 
-        items.sort(key=lambda x:x['start_time'], reverse=True)
+        if not 'sortby' in request.GET:
+            items.sort(key=lambda x:float(x['price']), reverse=True)
+        elif request.GET['sortby'] == 'time':
+            items.sort(key=lambda x:x['start_time'], reverse=True)
+        else:
+            items.sort(key=lambda x:float(x['price']), reverse=True)
 
         return render(request, 'search_item.html', context)
 
     if request.GET['mode'] == 'demands':
         context['mode'] = 'seller_view'
+        demands = []
+        context['demands'] = demands
 
         if not request.GET['keyword']:
             if int(request.GET['category']) == 0:
@@ -700,13 +707,23 @@ def search(request):
                     | Demand.objects.filter(is_closed__exact=False).filter(category__exact=request.GET['category']).filter(description__contains=request.GET['keyword'])
 
         for demand_obj in demand_objs:
-            demand_obj.price = '%.2f' % (demand_obj.price / 100.0)
-            demand_obj.category = category_converter(demand_obj.category)
-            demand_obj.posted_by_curr_user = demand_obj.user == request.user
+            demand = {}
+            demand['name'] = demand_obj.name
+            demand['description'] = demand_obj.description
+            demand['time'] = demand_obj.time
+            demand['user'] = demand_obj.user
+            demand['price'] = '%.2f' % (demand_obj.price / 100.0)
+            demand['category'] = category_converter(demand_obj.category)
+            demand['posted_by_curr_user'] = demand_obj.user == request.user
 
-        demand_objs = sorted(demand_objs, key=operator.attrgetter('time'), reverse=True)
+            demands.append(demand)
 
-        context['demands'] = demand_objs
+        if not 'sortby' in request.GET:
+            demands.sort(key=lambda x:float(x['price']), reverse=True)
+        elif request.GET['sortby'] == 'time':
+            demands.sort(key=lambda x:x['time'], reverse=True)
+        else:
+            demands.sort(key=lambda x:float(x['price']), reverse=True)
 
         return render(request, 'search_demand.html', context)
 
