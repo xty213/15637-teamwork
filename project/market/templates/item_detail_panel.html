@@ -2,7 +2,7 @@
                                             <div class="panel-heading">
                                                 <p class="item-category panel-title pull-left">{{item.category}}</p>
                                                 {% if item.is_closed %}
-                                                    {% if item.bid_log %}
+                                                    {% if item.is_auction and not item.bid_log|length %}
                                                     <p class="pull-right text-danger">Closed at {{item.deal_time|date:"m/d/Y H:i"}}</p>
                                                     {% else %}
                                                     <p class="pull-right text-danger">Sold at {{item.deal_time|date:"m/d/Y H:i"}}</p>
