@@ -1,3 +1,6 @@
+### IMPORTANT
+I retain the copyright of my work if you are a student who is taking relevant courses.
+
 15637 Project - Online Flea Market
 ==================================
 
